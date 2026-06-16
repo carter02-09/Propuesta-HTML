@@ -756,7 +756,7 @@
       <img src="img/logo.jpeg" alt="Logo del Colegio" class="logo-imagen">
 
       <div class="encabezado-textos">
-        <p class="nombre-colegio">Colegio Científico Bilingüe Reina de Los Ángeles</p>
+        <p class="nombre-colegio">Nombre del Colegio</p>
         <h1 class="titulo-herramienta">Generador de Videos con IA</h1>
         <p class="subtitulo-herramienta">
           Complete el siguiente formulario para crear su solicitud de video educativo
@@ -1037,7 +1037,8 @@
                  fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
-            Solicitud enviada correctamente. El equipo procesará su video a la brevedad.
+            <span id="notif-exito-texto">Solicitud enviada correctamente. El equipo procesará su video a la brevedad.</span>
+            
           </div>
 
           <div class="notificacion notificacion-error" id="notif-error" role="alert" aria-live="assertive">
@@ -1046,7 +1047,8 @@
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            Por favor, revise los campos marcados antes de continuar.
+            <span id="notif-error-texto">Por favor, revise los campos marcados antes de continuar.</span>
+            
           </div>
 
         </form>
@@ -1063,7 +1065,7 @@
     </div><!-- /tarjeta-formulario -->
 
     <p class="pie-global">
-      &copy; <span id="anio-actual"></span> Colegio Científico Bilingüe Reina de Los Ángeles &mdash; Todos los derechos reservados
+      &copy; <span id="anio-actual"></span> Nombre del Colegio &mdash; Todos los derechos reservados
     </p>
   </main>
 
@@ -1080,6 +1082,54 @@
     const btnEnviar    = document.getElementById('btn-enviar');
     const notifExito   = document.getElementById('notif-exito');
     const notifError   = document.getElementById('notif-error');
+    const notifExitoTexto = document.getElementById('notif-exito-texto'); 
+    const notifErrorTexto = document.getElementById('notif-error-texto'); 
+    /* 
+    * Durante las primeras pruebas puedes pegar la Test URL. 
+    * Cuando el workflow esté terminado, reemplázala por la Production URL. 
+    */ 
+   const WEBHOOK_URL = 'https://TU-SUBDOMINIO.app.n8n.cloud/webhook/generar-video'; 
+   const CLAVE_SOLICITUD = 'solicitud-video-actual'; 
+   /* 
+   * Conservamos el mismo identificador mientras se intenta enviar 
+   * la misma solicitud. Así evitamos duplicarla si se repite el envío. 
+   * 
+   */ 
+    function obtenerSolicitudId() { 
+      const solicitudExistente = sessionStorage.getItem(CLAVE_SOLICITUD); 
+      if (solicitudExistente) { 
+        return solicitudExistente; 
+      } 
+      
+      const nuevaSolicitud = 
+        typeof crypto.randomUUID === 'function' 
+        ? crypto.randomUUID() 
+        : `video-${Date.now()}-${Math.random().toString(16).slice(2)}`; 
+        
+        
+      sessionStorage.setItem(CLAVE_SOLICITUD, nuevaSolicitud); 
+      return nuevaSolicitud; 
+    } 
+    
+    function restaurarBotonEnviar() { 
+      btnEnviar.disabled = false; 
+      btnEnviar.innerHTML = ` 
+        <svg class="btn-icono" 
+          xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          aria-hidden="true"> 
+        <line x1="22" y1="2" x2="11" y2="13"/> 
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/> 
+        </svg> 
+        Enviar solicitud 
+        `; 
+      }
+    
 
     /* Campos configurados para validación */
     const camposValidar = [
@@ -1147,40 +1197,146 @@
       }
 
       /* ── Simular envío (reemplazar con fetch/API real) ── */
-      btnEnviar.disabled = true;
-      btnEnviar.textContent = 'Enviando…';
 
-      setTimeout(function() {
-        notifExito.classList.add('visible');
-        notifExito.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        btnEnviar.disabled = false;
-        btnEnviar.innerHTML = `
-          <svg class="btn-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-          Enviar solicitud`;
-      }, 1200);
-    });
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-    /* ── Limpiar formulario ── */
-    btnLimpiar.addEventListener('click', function() {
-      form.reset();
-      /* Quitar estados de error */
-      camposValidar.forEach(function(cfg) {
-        const el    = document.getElementById(cfg.id);
-        const error = document.getElementById(cfg.errorId);
-        el.classList.remove('campo-error-input');
-        el.removeAttribute('aria-invalid');
-        error.classList.remove('visible');
+        notifExito.classList.remove('visible');
+        notifError.classList.remove('visible');
+
+        const formValido = validarTodo();
+
+        if (!formValido) {
+          notifErrorTexto.textContent =
+            'Por favor, revise los campos marcados antes de continuar.';
+
+          notifError.classList.add('visible');
+
+          const primerError = form.querySelector('[aria-invalid="true"]');
+
+          if (primerError) {
+            primerError.focus();
+          }
+
+          return;
+        }
+
+        const campoTema = document.getElementById('tema-video');
+        const campoTono = document.getElementById('tono-video');
+        const campoDuracion = document.getElementById('duracion-video');
+        const campoPublico = document.getElementById('publico-video');
+
+        /*
+        * Guardamos tanto el código interno como el texto visible.
+        * Ejemplo:
+        * tonoCodigo: "educativo-amigable"
+        * tono: "Educativo amigable"
+        */
+        const datosSolicitud = {
+          solicitudId: obtenerSolicitudId(),
+
+          tema: campoTema.value.trim(),
+
+          tonoCodigo: campoTono.value,
+          tono: campoTono.options[campoTono.selectedIndex].text,
+
+          duracion: Number(campoDuracion.value),
+
+          publicoCodigo: campoPublico.value,
+          publico: campoPublico.options[campoPublico.selectedIndex].text
+        };
+
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Enviando…';
+
+        try {
+          const respuesta = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+
+            body: JSON.stringify(datosSolicitud)
+          });
+
+          const tipoContenido =
+            respuesta.headers.get('content-type') || '';
+
+          let datosRespuesta;
+
+          if (tipoContenido.includes('application/json')) {
+            datosRespuesta = await respuesta.json();
+          } else {
+            const textoRespuesta = await respuesta.text();
+
+            datosRespuesta = {
+              mensaje: textoRespuesta
+            };
+          }
+
+          if (!respuesta.ok) {
+            throw new Error(
+              datosRespuesta.mensaje ||
+              `La solicitud falló con el código ${respuesta.status}.`
+            );
+          }
+
+          notifExitoTexto.textContent =
+            datosRespuesta.mensaje ||
+            'La solicitud fue recibida correctamente.';
+
+          notifExito.classList.add('visible');
+
+          notifExito.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          });
+
+          console.log('Datos enviados:', datosSolicitud);
+          console.log('Respuesta de n8n:', datosRespuesta);
+
+        } catch (error) {
+          console.error('Error al enviar el formulario:', error);
+
+          const mensaje =
+            error instanceof TypeError
+              ? 'No fue posible conectarse con n8n. Revise la URL del Webhook y la configuración CORS.'
+              : error.message;
+
+          notifErrorTexto.textContent = mensaje;
+          notifError.classList.add('visible');
+
+          notifError.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          });
+
+        } finally {
+          restaurarBotonEnviar();
+        }
       });
-      /* Ocultar notificaciones */
-      notifExito.classList.remove('visible');
-      notifError.classList.remove('visible');
-      /* Devolver el foco al primer campo */
-      document.getElementById('tema-video').focus();
+      });
+
+      /* ── Limpiar formulario ── */
+      btnLimpiar.addEventListener('click', function() {
+        form.reset();
+        sessionStorage.removeItem(CLAVE_SOLICITUD);
+        
+        /* Quitar estados de error */
+        camposValidar.forEach(function(cfg) {
+          const el    = document.getElementById(cfg.id);
+          const error = document.getElementById(cfg.errorId);
+          el.classList.remove('campo-error-input');
+          el.removeAttribute('aria-invalid');
+          error.classList.remove('visible');
+        });
+        /* Ocultar notificaciones */
+        notifExito.classList.remove('visible');
+        notifError.classList.remove('visible');
+        /* Devolver el foco al primer campo */
+        document.getElementById('tema-video').focus();
     });
   </script>
 
