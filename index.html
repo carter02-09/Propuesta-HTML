@@ -37,7 +37,6 @@
       --texto-md:   1.125rem;
       --texto-lg:   1.375rem;
       --texto-xl:   1.75rem;
-      --texto-2xl:  2.25rem;
 
       --sp-1: 0.25rem;
       --sp-2: 0.5rem;
@@ -120,24 +119,6 @@
       display: flex;
       align-items: center;
       gap: var(--sp-8);
-    }
-
-    .logo-contenedor {
-      flex-shrink: 0;
-      width: 96px;
-      height: 96px;
-      border-radius: var(--radio-md);
-      background-color: rgba(255, 255, 255, 0.12);
-      border: 2px dashed rgba(208, 172, 43, 0.6);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: var(--sp-1);
-      color: rgba(255, 255, 255, 0.7);
-      font-size: var(--texto-xs);
-      text-align: center;
-      letter-spacing: 0.03em;
     }
 
     .logo-imagen {
@@ -428,7 +409,8 @@
       font-weight: bold;
     }
 
-    .acciones-formulario {
+    .acciones-formulario,
+    .acciones-revision {
       display: flex;
       gap: var(--sp-4);
       align-items: center;
@@ -453,6 +435,7 @@
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: var(--sp-2);
     }
 
@@ -519,7 +502,6 @@
       color: var(--color-error);
       border-color: var(--color-error);
       min-width: 140px;
-      justify-content: center;
     }
 
     .btn-peligro:hover:not(:disabled) {
@@ -599,17 +581,122 @@
       color: var(--color-gris-texto);
     }
 
+    .resumen-generado p {
+      margin-bottom: var(--sp-2);
+    }
+
+    .resumen-generado p:last-child {
+      margin-bottom: 0;
+    }
+
     .resumen-generado strong {
       color: var(--color-azul);
     }
 
-    .acciones-revision {
-      display: flex;
+    .galeria-avatares {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: var(--sp-4);
-      flex-wrap: wrap;
-      margin-top: var(--sp-8);
-      padding-top: var(--sp-6);
-      border-top: 1px solid var(--color-gris-borde);
+      margin-top: var(--sp-3);
+    }
+
+    .tarjeta-avatar {
+      background-color: var(--color-blanco);
+      border: 2px solid var(--color-gris-borde);
+      border-radius: var(--radio-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color var(--transicion), box-shadow var(--transicion), transform var(--transicion);
+      text-align: left;
+      padding: 0;
+      font-family: var(--fuente-ui);
+      color: var(--color-negro);
+    }
+
+    .tarjeta-avatar:hover {
+      border-color: var(--color-azul-medio);
+      transform: translateY(-2px);
+      box-shadow: var(--sombra-suave);
+    }
+
+    .tarjeta-avatar:focus-visible {
+      outline: none;
+      box-shadow: var(--sombra-foco);
+    }
+
+    .tarjeta-avatar.seleccionada {
+      border-color: var(--color-dorado);
+      box-shadow: 0 0 0 3px rgba(208, 172, 43, 0.35);
+    }
+
+    .avatar-imagen {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+      background-color: var(--color-azul-claro);
+    }
+
+    .avatar-imagen-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(135deg, var(--color-azul-claro), var(--color-blanco));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-azul);
+      font-size: var(--texto-xs);
+      padding: var(--sp-3);
+      text-align: center;
+    }
+
+    .avatar-info {
+      padding: var(--sp-3);
+    }
+
+    .avatar-nombre {
+      display: block;
+      font-size: var(--texto-sm);
+      color: var(--color-azul);
+      font-weight: bold;
+      line-height: 1.3;
+    }
+
+    .avatar-genero {
+      display: block;
+      font-size: var(--texto-xs);
+      color: var(--color-gris-muted);
+      margin-top: var(--sp-1);
+    }
+
+    .texto-cargando-avatares,
+    .texto-sin-avatares {
+      grid-column: 1 / -1;
+      font-size: var(--texto-sm);
+      color: var(--color-gris-texto);
+      background-color: var(--color-blanco);
+      border: 1px solid var(--color-gris-borde);
+      border-radius: var(--radio-sm);
+      padding: var(--sp-4);
+    }
+
+    .preview-voz {
+      margin-top: var(--sp-3);
+      background-color: var(--color-blanco);
+      border: 1px solid var(--color-gris-borde);
+      border-radius: var(--radio-sm);
+      padding: var(--sp-3);
+      font-size: var(--texto-sm);
+      color: var(--color-azul);
+    }
+
+    .preview-voz[hidden] {
+      display: none;
+    }
+
+    .preview-voz audio {
+      width: 100%;
+      margin-top: var(--sp-2);
     }
 
     .tarjeta-pie {
@@ -655,7 +742,6 @@
         gap: var(--sp-5);
       }
 
-      .logo-contenedor,
       .logo-imagen {
         width: 80px;
         height: 80px;
@@ -692,7 +778,6 @@
       .btn {
         width: 100%;
         min-width: unset;
-        justify-content: center;
       }
 
       .tarjeta-pie {
@@ -721,10 +806,9 @@
 <body>
   <header class="encabezado-institucional">
     <div class="encabezado-contenido">
+      <img src="img/logo.jpeg" alt="Logo del Colegio" class="logo-imagen">
 
 ```
-  <img src="img/logo.jpeg" alt="Logo del Colegio" class="logo-imagen">
-
   <div class="encabezado-textos">
     <p class="nombre-colegio">Nombre del Colegio</p>
     <h1 class="titulo-herramienta">Generador de Videos con IA</h1>
@@ -759,11 +843,7 @@
       Los campos marcados con <span class="asterisco">*</span> son obligatorios.
     </p>
 
-    <form
-      id="formulario-video"
-      novalidate
-      aria-label="Formulario de solicitud de video educativo con IA"
-    >
+    <form id="formulario-video" novalidate aria-label="Formulario de solicitud de video educativo con IA">
 
       <section class="seccion-formulario" aria-labelledby="sec-contenido">
         <h2 class="seccion-titulo" id="sec-contenido">Contenido del video</h2>
@@ -961,21 +1041,11 @@
       </section>
 
       <div class="acciones-formulario">
-        <button
-          type="button"
-          class="btn btn-secundario"
-          id="btn-limpiar"
-          aria-label="Limpiar todos los campos del formulario"
-        >
+        <button type="button" class="btn btn-secundario" id="btn-limpiar">
           Limpiar
         </button>
 
-        <button
-          type="submit"
-          class="btn btn-primario"
-          id="btn-enviar"
-          aria-label="Enviar la solicitud de video"
-        >
+        <button type="submit" class="btn btn-primario" id="btn-enviar">
           Enviar solicitud
         </button>
       </div>
@@ -1020,33 +1090,45 @@
       </div>
 
       <div class="campo-grupo">
-        <label class="campo-etiqueta" for="avatar-revision">
+        <label class="campo-etiqueta">
           Avatar para el video <span class="requerido" aria-hidden="true">*</span>
         </label>
-        <div class="select-contenedor">
-          <select id="avatar-revision" class="campo-select">
-            <option value="">— Seleccione un avatar —</option>
-          </select>
-          <svg class="select-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
+
+        <input type="hidden" id="avatar-revision" value="">
+
+        <div class="galeria-avatares" id="galeria-avatares">
+          <p class="texto-cargando-avatares">Cargando avatares disponibles...</p>
         </div>
+
+        <span class="campo-ayuda">
+          Seleccione el avatar dando clic sobre la imagen.
+        </span>
       </div>
 
       <div class="campo-grupo">
         <label class="campo-etiqueta" for="voz-revision">
           Voz para el video <span class="requerido" aria-hidden="true">*</span>
         </label>
+
         <div class="select-contenedor">
           <select id="voz-revision" class="campo-select">
-            <option value="">— Seleccione una voz —</option>
+            <option value="">— Seleccione una voz en español —</option>
           </select>
+
           <svg class="select-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <polyline points="6 9 12 15 18 9"/>
           </svg>
         </div>
+
+        <div class="preview-voz" id="preview-voz" hidden>
+          <strong>Vista previa de voz:</strong>
+          <audio id="audio-preview-voz" controls></audio>
+        </div>
+
+        <span class="campo-ayuda">
+          Solo se mostrarán voces detectadas como español desde HeyGen.
+        </span>
       </div>
 
       <div class="acciones-revision">
@@ -1082,12 +1164,11 @@
     document.getElementById('anio-actual').textContent = new Date().getFullYear();
 
     /*
-      IMPORTANTE:
-      - Para pruebas con n8n abierto en modo test, usa:
-        https://zuzu09.app.n8n.cloud/webhook-test/generar-video
+      Para pruebas:
+      https://zuzu09.app.n8n.cloud/webhook-test/generar-video
 
-      - Cuando actives/publices el workflow, cambia a:
-        https://zuzu09.app.n8n.cloud/webhook/generar-video
+      Para producción cuando el workflow esté activo:
+      https://zuzu09.app.n8n.cloud/webhook/generar-video
     */
     const WEBHOOK_URL = 'https://zuzu09.app.n8n.cloud/webhook-test/generar-video';
 
@@ -1107,13 +1188,20 @@
     const revisionResumen = document.getElementById('revision-resumen');
     const revisionAvatarRecomendado = document.getElementById('revision-avatar-recomendado');
     const revisionVozRecomendada = document.getElementById('revision-voz-recomendada');
+
     const guionRevision = document.getElementById('guion-revision');
     const avatarRevision = document.getElementById('avatar-revision');
     const vozRevision = document.getElementById('voz-revision');
+
+    const galeriaAvatares = document.getElementById('galeria-avatares');
+    const previewVoz = document.getElementById('preview-voz');
+    const audioPreviewVoz = document.getElementById('audio-preview-voz');
+
     const btnAprobar = document.getElementById('btn-aprobar');
     const btnRechazar = document.getElementById('btn-rechazar');
 
     let datosRevisionActual = null;
+    let avatarSeleccionadoId = "";
 
     const camposValidar = [
       { id: 'tema-video', errorId: 'tema-video-error', tipo: 'textarea' },
@@ -1181,24 +1269,6 @@
       return camposValidar.reduce((acum, cfg) => validarCampo(cfg) && acum, true);
     }
 
-    camposValidar.forEach(function(cfg) {
-      const el = document.getElementById(cfg.id);
-
-      el.addEventListener('blur', function() {
-        validarCampo(cfg);
-      });
-
-      el.addEventListener('change', function() {
-        validarCampo(cfg);
-      });
-
-      el.addEventListener('input', function() {
-        if (el.getAttribute('aria-invalid') === 'true') {
-          validarCampo(cfg);
-        }
-      });
-    });
-
     function mostrarError(mensaje) {
       notifErrorTexto.textContent = mensaje;
       notifError.classList.add('visible');
@@ -1221,27 +1291,99 @@
       });
     }
 
-    function llenarSelect(select, opciones, textoPlaceholder, propiedadId) {
-      select.innerHTML = '';
+    function limpiarTexto(texto) {
+      return String(texto || '');
+    }
 
-      const opcionInicial = document.createElement('option');
-      opcionInicial.value = '';
-      opcionInicial.textContent = textoPlaceholder;
+    function renderizarAvatares(opcionesAvatar) {
+      galeriaAvatares.innerHTML = "";
+      avatarRevision.value = "";
+      avatarSeleccionadoId = "";
+
+      if (!Array.isArray(opcionesAvatar) || opcionesAvatar.length === 0) {
+        const mensaje = document.createElement('p');
+        mensaje.className = 'texto-sin-avatares';
+        mensaje.textContent = 'No se recibieron avatares disponibles desde HeyGen.';
+        galeriaAvatares.appendChild(mensaje);
+        return;
+      }
+
+      opcionesAvatar.forEach(function(avatar) {
+        const tarjeta = document.createElement("button");
+        tarjeta.type = "button";
+        tarjeta.className = "tarjeta-avatar";
+        tarjeta.dataset.avatarId = avatar.avatarId || "";
+
+        const imagenUrl = avatar.previewImageUrl || "";
+        const nombre = avatar.label || avatar.avatarId || "Avatar sin nombre";
+        const genero = avatar.gender ? `Género: ${avatar.gender}` : "Avatar disponible";
+
+        if (imagenUrl) {
+          const imagen = document.createElement('img');
+          imagen.src = imagenUrl;
+          imagen.alt = nombre;
+          imagen.className = 'avatar-imagen';
+          imagen.loading = 'lazy';
+          tarjeta.appendChild(imagen);
+        } else {
+          const placeholder = document.createElement('div');
+          placeholder.className = 'avatar-imagen-placeholder';
+          placeholder.textContent = 'Sin imagen disponible';
+          tarjeta.appendChild(placeholder);
+        }
+
+        const info = document.createElement('div');
+        info.className = 'avatar-info';
+
+        const spanNombre = document.createElement('span');
+        spanNombre.className = 'avatar-nombre';
+        spanNombre.textContent = nombre;
+
+        const spanGenero = document.createElement('span');
+        spanGenero.className = 'avatar-genero';
+        spanGenero.textContent = genero;
+
+        info.appendChild(spanNombre);
+        info.appendChild(spanGenero);
+        tarjeta.appendChild(info);
+
+        tarjeta.addEventListener("click", function() {
+          document
+            .querySelectorAll(".tarjeta-avatar")
+            .forEach((item) => item.classList.remove("seleccionada"));
+
+          tarjeta.classList.add("seleccionada");
+
+          avatarSeleccionadoId = avatar.avatarId || "";
+          avatarRevision.value = avatarSeleccionadoId;
+        });
+
+        galeriaAvatares.appendChild(tarjeta);
+      });
+    }
+
+    function llenarSelectVoces(select, opciones) {
+      select.innerHTML = "";
+
+      const opcionInicial = document.createElement("option");
+      opcionInicial.value = "";
+      opcionInicial.textContent = "— Seleccione una voz en español —";
       select.appendChild(opcionInicial);
 
       if (!Array.isArray(opciones) || opciones.length === 0) {
-        const opcionVacia = document.createElement('option');
-        opcionVacia.value = '';
-        opcionVacia.textContent = 'No hay opciones disponibles';
+        const opcionVacia = document.createElement("option");
+        opcionVacia.value = "";
+        opcionVacia.textContent = "No hay voces en español disponibles";
         opcionVacia.disabled = true;
         select.appendChild(opcionVacia);
         return;
       }
 
-      opciones.forEach(function(opcion) {
-        const option = document.createElement('option');
-        option.value = opcion[propiedadId] || opcion.id || opcion.value || '';
-        option.textContent = opcion.label || opcion.nombre || opcion.name || option.value;
+      opciones.forEach(function(voz) {
+        const option = document.createElement("option");
+        option.value = voz.voiceId || "";
+        option.textContent = voz.label || voz.name || voz.voiceId || "Voz sin nombre";
+        option.dataset.previewAudioUrl = voz.previewAudioUrl || "";
         select.appendChild(option);
       });
     }
@@ -1256,19 +1398,11 @@
 
       guionRevision.value = datosRespuesta.guion || '';
 
-      llenarSelect(
-        avatarRevision,
-        datosRespuesta.opcionesAvatar,
-        '— Seleccione un avatar —',
-        'avatarId'
-      );
+      renderizarAvatares(datosRespuesta.opcionesAvatar);
+      llenarSelectVoces(vozRevision, datosRespuesta.opcionesVoz);
 
-      llenarSelect(
-        vozRevision,
-        datosRespuesta.opcionesVoz,
-        '— Seleccione una voz —',
-        'voiceId'
-      );
+      previewVoz.hidden = true;
+      audioPreviewVoz.removeAttribute("src");
 
       panelRevision.hidden = false;
 
@@ -1290,9 +1424,14 @@
         return false;
       }
 
-      if (avatarRevision.value === '') {
+      if (!avatarSeleccionadoId && !avatarRevision.value) {
         mostrarError('Debe seleccionar un avatar antes de aprobar.');
-        avatarRevision.focus();
+
+        galeriaAvatares.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+
         return false;
       }
 
@@ -1304,6 +1443,37 @@
 
       return true;
     }
+
+    camposValidar.forEach(function(cfg) {
+      const el = document.getElementById(cfg.id);
+
+      el.addEventListener('blur', function() {
+        validarCampo(cfg);
+      });
+
+      el.addEventListener('change', function() {
+        validarCampo(cfg);
+      });
+
+      el.addEventListener('input', function() {
+        if (el.getAttribute('aria-invalid') === 'true') {
+          validarCampo(cfg);
+        }
+      });
+    });
+
+    vozRevision.addEventListener("change", function() {
+      const opcionSeleccionada = vozRevision.options[vozRevision.selectedIndex];
+      const previewUrl = opcionSeleccionada?.dataset?.previewAudioUrl || "";
+
+      if (previewUrl) {
+        audioPreviewVoz.src = previewUrl;
+        previewVoz.hidden = false;
+      } else {
+        audioPreviewVoz.removeAttribute("src");
+        previewVoz.hidden = true;
+      }
+    });
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -1432,7 +1602,7 @@
             resumen: datosRevisionActual.resumen,
 
             guionFinal: guionRevision.value.trim(),
-            avatarId: avatarRevision.value,
+            avatarId: avatarSeleccionadoId || avatarRevision.value,
             voiceId: vozRevision.value,
             motionPrompt: datosRevisionActual.motionPrompt || ''
           })
@@ -1503,6 +1673,7 @@
       form.reset();
       sessionStorage.removeItem(CLAVE_SOLICITUD);
       datosRevisionActual = null;
+      avatarSeleccionadoId = "";
 
       camposValidar.forEach(function(cfg) {
         const el = document.getElementById(cfg.id);
@@ -1516,6 +1687,10 @@
       notifExito.classList.remove('visible');
       notifError.classList.remove('visible');
       panelRevision.hidden = true;
+
+      galeriaAvatares.innerHTML = '<p class="texto-cargando-avatares">Cargando avatares disponibles...</p>';
+      previewVoz.hidden = true;
+      audioPreviewVoz.removeAttribute("src");
 
       document.getElementById('tema-video').focus();
     });
