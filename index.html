@@ -1,94 +1,64 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Generador de Videos con IA — Colegio</title>
 
   <style>
     :root {
-      --color-azul:        #132b54;
-      --color-azul-medio:  #1e4080;
-      --color-azul-claro:  #e8eef6;
-      --color-dorado:      #d0ac2b;
-      --color-dorado-hover:#b8941f;
-      --color-dorado-suave:#fdf6dc;
+      --color-azul: #132b54;
+      --color-azul-medio: #1e4080;
+      --color-azul-claro: #e8eef6;
+      --color-dorado: #d0ac2b;
+      --color-dorado-hover: #b8941f;
+      --color-dorado-suave: #fdf6dc;
 
-      --color-blanco:      #ffffff;
-      --color-gris-fondo:  #f4f6fa;
-      --color-gris-borde:  #c8d0de;
-      --color-gris-texto:  #4a5568;
-      --color-gris-muted:  #8a97a8;
-      --color-negro:       #0d1b2e;
+      --color-blanco: #ffffff;
+      --color-gris-fondo: #f4f6fa;
+      --color-gris-borde: #c8d0de;
+      --color-gris-texto: #4a5568;
+      --color-gris-muted: #8a97a8;
+      --color-negro: #0d1b2e;
 
-      --color-error:       #c0392b;
+      --color-error: #c0392b;
       --color-error-fondo: #fdf0ee;
-      --color-exito:       #1e7e4a;
+      --color-exito: #1e7e4a;
+      --color-exito-fondo: #edf7f0;
 
       --fuente-principal: 'Lucida Fax', 'Book Antiqua', 'Palatino Linotype',
                           'Palatino', Georgia, 'Times New Roman', serif;
-      --fuente-ui:        'Lucida Fax', 'Book Antiqua', 'Palatino Linotype',
-                          Georgia, serif;
 
-      --texto-xs:   0.75rem;
-      --texto-sm:   0.875rem;
-      --texto-base: 1rem;
-      --texto-md:   1.125rem;
-      --texto-lg:   1.375rem;
-      --texto-xl:   1.75rem;
+      --radio-sm: 4px;
+      --radio-md: 8px;
+      --radio-lg: 12px;
 
-      --sp-1: 0.25rem;
-      --sp-2: 0.5rem;
-      --sp-3: 0.75rem;
-      --sp-4: 1rem;
-      --sp-5: 1.25rem;
-      --sp-6: 1.5rem;
-      --sp-8: 2rem;
-      --sp-10: 2.5rem;
-      --sp-12: 3rem;
-      --sp-16: 4rem;
-
-      --radio-sm:  4px;
-      --radio-md:  8px;
-      --radio-lg:  12px;
       --sombra-suave: 0 2px 8px rgba(19, 43, 84, 0.08);
-      --sombra-card:  0 4px 20px rgba(19, 43, 84, 0.12);
-      --sombra-foco:  0 0 0 3px rgba(208, 172, 43, 0.35);
+      --sombra-card: 0 4px 20px rgba(19, 43, 84, 0.12);
+      --sombra-foco: 0 0 0 3px rgba(208, 172, 43, 0.35);
 
       --transicion: 0.2s ease;
     }
 
-    *, *::before, *::after {
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-    }
-
     body {
       font-family: var(--fuente-principal);
-      background-color: var(--color-gris-fondo);
+      background: var(--color-gris-fondo);
       color: var(--color-negro);
       line-height: 1.6;
       min-height: 100vh;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-      }
-    }
-
     .encabezado-institucional {
-      background: linear-gradient(135deg, var(--color-azul) 0%, var(--color-azul-medio) 100%);
+      background: linear-gradient(135deg, var(--color-azul), var(--color-azul-medio));
       color: var(--color-blanco);
-      padding: var(--sp-8) var(--sp-6);
+      padding: 2rem 1.5rem;
       position: relative;
       overflow: hidden;
     }
@@ -96,29 +66,21 @@
     .encabezado-institucional::after {
       content: '';
       position: absolute;
-      bottom: 0;
       left: 0;
       right: 0;
+      bottom: 0;
       height: 4px;
       background: linear-gradient(90deg, var(--color-dorado), var(--color-dorado-hover));
     }
 
-    .encabezado-institucional::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-    }
-
     .encabezado-contenido {
-      position: relative;
-      max-width: 760px;
+      max-width: 900px;
       margin: 0 auto;
       display: flex;
       align-items: center;
-      gap: var(--sp-8);
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
     }
 
     .logo-imagen {
@@ -126,42 +88,34 @@
       height: 96px;
       object-fit: contain;
       border-radius: var(--radio-sm);
+      background: rgba(255, 255, 255, 0.1);
       flex-shrink: 0;
-      background-color: rgba(255,255,255,0.08);
-    }
-
-    .encabezado-textos {
-      flex: 1;
     }
 
     .nombre-colegio {
-      font-size: var(--texto-sm);
-      font-weight: normal;
+      color: var(--color-dorado);
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--color-dorado);
-      margin-bottom: var(--sp-2);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
     }
 
     .titulo-herramienta {
-      font-size: var(--texto-xl);
-      font-weight: bold;
+      font-size: 1.8rem;
       line-height: 1.2;
-      color: var(--color-blanco);
-      margin-bottom: var(--sp-2);
+      margin-bottom: 0.5rem;
     }
 
     .subtitulo-herramienta {
-      font-size: var(--texto-sm);
-      color: rgba(255, 255, 255, 0.72);
-      line-height: 1.5;
-      max-width: 480px;
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 620px;
+      font-size: 0.95rem;
     }
 
     .contenedor-principal {
-      max-width: 760px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: var(--sp-10) var(--sp-6) var(--sp-16);
+      padding: 2.5rem 1.5rem 4rem;
     }
 
     .tarjeta-formulario {
@@ -173,85 +127,87 @@
     }
 
     .tarjeta-banda {
-      background-color: var(--color-azul-claro);
+      background: var(--color-azul-claro);
       border-bottom: 1px solid var(--color-gris-borde);
-      padding: var(--sp-5) var(--sp-8);
+      padding: 1.25rem 2rem;
       display: flex;
       align-items: center;
-      gap: var(--sp-3);
-    }
-
-    .banda-icono {
-      width: 20px;
-      height: 20px;
-      color: var(--color-azul);
-      flex-shrink: 0;
+      gap: 0.75rem;
     }
 
     .banda-etiqueta {
-      font-size: var(--texto-sm);
       color: var(--color-azul);
       font-weight: bold;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      font-size: 0.9rem;
     }
 
     .banda-paso {
       margin-left: auto;
       background: var(--color-azul);
       color: var(--color-dorado);
-      font-size: var(--texto-xs);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
       font-weight: bold;
       letter-spacing: 0.08em;
-      padding: var(--sp-1) var(--sp-3);
-      border-radius: 20px;
     }
 
     .tarjeta-cuerpo {
-      padding: var(--sp-8);
+      padding: 2rem;
+    }
+
+    .nota-requeridos {
+      color: var(--color-gris-muted);
+      font-size: 0.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .asterisco,
+    .requerido {
+      color: var(--color-dorado-hover);
+      font-weight: bold;
     }
 
     .seccion-formulario {
-      margin-bottom: var(--sp-8);
-      padding-bottom: var(--sp-8);
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
       border-bottom: 1px solid var(--color-gris-borde);
     }
 
     .seccion-formulario:last-of-type {
       border-bottom: none;
-      margin-bottom: 0;
       padding-bottom: 0;
     }
 
     .seccion-titulo {
-      font-size: var(--texto-md);
-      font-weight: bold;
       color: var(--color-azul);
-      margin-bottom: var(--sp-1);
+      font-size: 1.15rem;
+      margin-bottom: 0.25rem;
       display: flex;
       align-items: center;
-      gap: var(--sp-2);
+      gap: 0.5rem;
     }
 
     .seccion-titulo::before {
       content: '';
-      display: inline-block;
       width: 4px;
       height: 1.1em;
       background: var(--color-dorado);
-      border-radius: 2px;
-      flex-shrink: 0;
+      border-radius: 4px;
+      display: inline-block;
     }
 
     .seccion-descripcion {
-      font-size: var(--texto-sm);
       color: var(--color-gris-texto);
-      margin-bottom: var(--sp-5);
-      margin-left: calc(4px + var(--sp-2));
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+      margin-left: 0.75rem;
     }
 
     .campo-grupo {
-      margin-bottom: var(--sp-6);
+      margin-bottom: 1.5rem;
     }
 
     .campo-grupo:last-child {
@@ -260,47 +216,29 @@
 
     .campo-etiqueta {
       display: block;
-      font-size: var(--texto-sm);
-      font-weight: bold;
       color: var(--color-azul);
-      margin-bottom: var(--sp-2);
-      letter-spacing: 0.02em;
-    }
-
-    .campo-etiqueta .requerido {
-      color: var(--color-dorado-hover);
-      margin-left: var(--sp-1);
+      font-size: 0.9rem;
       font-weight: bold;
-    }
-
-    .campo-ayuda {
-      font-size: var(--texto-xs);
-      color: var(--color-gris-muted);
-      margin-top: var(--sp-2);
-      display: block;
+      margin-bottom: 0.5rem;
     }
 
     .campo-input,
     .campo-select,
     .campo-textarea {
-      display: block;
       width: 100%;
-      font-family: var(--fuente-ui);
-      font-size: var(--texto-base);
+      font-family: var(--fuente-principal);
+      font-size: 1rem;
       color: var(--color-negro);
-      background-color: var(--color-blanco);
       border: 1.5px solid var(--color-gris-borde);
       border-radius: var(--radio-sm);
-      padding: var(--sp-3) var(--sp-4);
-      transition: border-color var(--transicion), box-shadow var(--transicion), background-color var(--transicion);
-      appearance: none;
-      -webkit-appearance: none;
+      padding: 0.75rem 1rem;
+      background: var(--color-blanco);
+      transition: border-color var(--transicion), box-shadow var(--transicion);
     }
 
-    .campo-input::placeholder,
-    .campo-textarea::placeholder {
-      color: var(--color-gris-muted);
-      font-style: italic;
+    .campo-textarea {
+      resize: vertical;
+      min-height: 110px;
     }
 
     .campo-input:focus,
@@ -309,66 +247,39 @@
       outline: none;
       border-color: var(--color-azul);
       box-shadow: var(--sombra-foco);
-      background-color: var(--color-blanco);
-    }
-
-    .campo-input:hover:not(:focus):not(.campo-error-input),
-    .campo-select:hover:not(:focus):not(.campo-error-input),
-    .campo-textarea:hover:not(:focus):not(.campo-error-input) {
-      border-color: var(--color-azul-medio);
     }
 
     .campo-error-input {
       border-color: var(--color-error) !important;
-      background-color: var(--color-error-fondo);
+      background: var(--color-error-fondo);
     }
 
-    .campo-error-input:focus {
-      box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.25) !important;
+    .campo-ayuda {
+      display: block;
+      color: var(--color-gris-muted);
+      font-size: 0.78rem;
+      margin-top: 0.45rem;
     }
 
     .campo-mensaje-error {
       display: none;
-      font-size: var(--texto-xs);
       color: var(--color-error);
-      margin-top: var(--sp-2);
+      font-size: 0.78rem;
       font-weight: bold;
-      align-items: center;
-      gap: var(--sp-1);
+      margin-top: 0.45rem;
     }
 
     .campo-mensaje-error.visible {
-      display: flex;
+      display: block;
     }
 
-    .select-contenedor {
-      position: relative;
-    }
-
-    .campo-select {
-      padding-right: var(--sp-10);
-      cursor: pointer;
-    }
-
-    .select-icono {
-      position: absolute;
-      right: var(--sp-4);
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: var(--color-azul);
-      width: 16px;
-      height: 16px;
-    }
-
+    .select-contenedor,
     .input-con-unidad {
       position: relative;
-      display: flex;
-      align-items: center;
     }
 
     .input-con-unidad .campo-input {
-      padding-right: 5.5rem;
+      padding-right: 6rem;
     }
 
     .input-unidad {
@@ -378,177 +289,114 @@
       bottom: 0;
       display: flex;
       align-items: center;
-      padding: 0 var(--sp-4);
+      padding: 0 1rem;
       background: var(--color-azul-claro);
-      border: 1.5px solid var(--color-gris-borde);
-      border-left: none;
-      border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
-      font-size: var(--texto-sm);
+      border-left: 1.5px solid var(--color-gris-borde);
       color: var(--color-azul);
+      font-size: 0.85rem;
       font-weight: bold;
-      white-space: nowrap;
-      pointer-events: none;
-      letter-spacing: 0.03em;
-    }
-
-    .campo-textarea {
-      resize: vertical;
-      min-height: 110px;
-      line-height: 1.6;
-    }
-
-    .nota-requeridos {
-      font-size: var(--texto-xs);
-      color: var(--color-gris-muted);
-      margin-bottom: var(--sp-8);
-      padding-left: var(--sp-1);
-    }
-
-    .nota-requeridos .asterisco {
-      color: var(--color-dorado-hover);
-      font-weight: bold;
+      border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
     }
 
     .acciones-formulario,
     .acciones-revision {
       display: flex;
-      gap: var(--sp-4);
+      gap: 1rem;
       align-items: center;
-      padding-top: var(--sp-8);
-      border-top: 1px solid var(--color-gris-borde);
       flex-wrap: wrap;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--color-gris-borde);
     }
 
     .btn {
-      font-family: var(--fuente-ui);
-      font-size: var(--texto-base);
+      font-family: var(--fuente-principal);
+      font-size: 1rem;
       font-weight: bold;
-      padding: var(--sp-3) var(--sp-8);
+      padding: 0.75rem 1.6rem;
       border-radius: var(--radio-sm);
       border: 2px solid transparent;
       cursor: pointer;
-      transition: background-color var(--transicion), color var(--transicion),
-                  border-color var(--transicion), box-shadow var(--transicion),
-                  transform var(--transicion);
-      letter-spacing: 0.03em;
-      text-align: center;
-      white-space: nowrap;
+      transition: var(--transicion);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: var(--sp-2);
+      gap: 0.5rem;
+      min-width: 160px;
     }
 
-    .btn:focus-visible {
-      outline: none;
-      box-shadow: var(--sombra-foco);
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
     }
 
     .btn-primario {
-      background-color: var(--color-dorado);
+      background: var(--color-dorado);
       color: var(--color-azul);
       border-color: var(--color-dorado);
       flex: 1;
-      justify-content: center;
-      min-width: 180px;
     }
 
     .btn-primario:hover:not(:disabled) {
-      background-color: var(--color-dorado-hover);
+      background: var(--color-dorado-hover);
       border-color: var(--color-dorado-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(208, 172, 43, 0.4);
-    }
-
-    .btn-primario:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: none;
-    }
-
-    .btn-primario:disabled {
-      background-color: var(--color-gris-borde);
-      border-color: var(--color-gris-borde);
-      color: var(--color-gris-muted);
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
+      box-shadow: 0 4px 12px rgba(208, 172, 43, 0.35);
     }
 
     .btn-secundario {
-      background-color: transparent;
+      background: transparent;
       color: var(--color-azul);
       border-color: var(--color-azul);
-      min-width: 140px;
-      justify-content: center;
     }
 
     .btn-secundario:hover:not(:disabled) {
-      background-color: var(--color-azul-claro);
+      background: var(--color-azul-claro);
       transform: translateY(-1px);
-    }
-
-    .btn-secundario:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
-    .btn-secundario:disabled {
-      color: var(--color-gris-muted);
-      border-color: var(--color-gris-borde);
-      cursor: not-allowed;
     }
 
     .btn-peligro {
-      background-color: transparent;
+      background: transparent;
       color: var(--color-error);
       border-color: var(--color-error);
-      min-width: 140px;
     }
 
     .btn-peligro:hover:not(:disabled) {
-      background-color: var(--color-error-fondo);
+      background: var(--color-error-fondo);
       transform: translateY(-1px);
-    }
-
-    .btn-icono {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
     }
 
     .notificacion {
       display: none;
-      margin-top: var(--sp-6);
-      padding: var(--sp-4) var(--sp-6);
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
       border-radius: var(--radio-sm);
-      font-size: var(--texto-sm);
+      font-size: 0.9rem;
       font-weight: bold;
       border: 1.5px solid;
-      align-items: center;
-      gap: var(--sp-3);
     }
 
     .notificacion.visible {
-      display: flex;
+      display: block;
     }
 
     .notificacion-exito {
-      background-color: #edf7f0;
+      background: var(--color-exito-fondo);
       border-color: var(--color-exito);
       color: var(--color-exito);
     }
 
     .notificacion-error {
-      background-color: var(--color-error-fondo);
+      background: var(--color-error-fondo);
       border-color: var(--color-error);
       color: var(--color-error);
     }
 
     .panel-revision {
-      margin-top: var(--sp-8);
-      padding: var(--sp-8);
+      margin-top: 2rem;
+      padding: 2rem;
+      background: var(--color-dorado-suave);
       border: 1.5px solid var(--color-gris-borde);
       border-radius: var(--radio-lg);
-      background-color: var(--color-dorado-suave);
       box-shadow: var(--sombra-suave);
     }
 
@@ -556,33 +404,30 @@
       display: none;
     }
 
-    .panel-revision-cabecera {
-      margin-bottom: var(--sp-6);
-    }
-
     .panel-revision-titulo {
       color: var(--color-azul);
-      font-size: var(--texto-lg);
-      margin-bottom: var(--sp-2);
+      margin-bottom: 0.5rem;
+      font-size: 1.35rem;
     }
 
     .panel-revision-descripcion {
       color: var(--color-gris-texto);
-      font-size: var(--texto-sm);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
     }
 
     .resumen-generado {
-      background-color: var(--color-blanco);
+      background: var(--color-blanco);
       border: 1px solid var(--color-gris-borde);
       border-radius: var(--radio-sm);
-      padding: var(--sp-4);
-      margin-bottom: var(--sp-6);
-      font-size: var(--texto-sm);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
       color: var(--color-gris-texto);
     }
 
     .resumen-generado p {
-      margin-bottom: var(--sp-2);
+      margin-bottom: 0.5rem;
     }
 
     .resumen-generado p:last-child {
@@ -593,153 +438,185 @@
       color: var(--color-azul);
     }
 
-    .galeria-avatares {
+    .galeria-imagenes {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: var(--sp-4);
-      margin-top: var(--sp-3);
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
     }
 
-    .tarjeta-avatar {
-      background-color: var(--color-blanco);
+    .tarjeta-imagen {
+      background: var(--color-blanco);
       border: 2px solid var(--color-gris-borde);
       border-radius: var(--radio-md);
       overflow: hidden;
+      transition: var(--transicion);
       cursor: pointer;
-      transition: border-color var(--transicion), box-shadow var(--transicion), transform var(--transicion);
-      text-align: left;
-      padding: 0;
-      font-family: var(--fuente-ui);
-      color: var(--color-negro);
+      display: block;
     }
 
-    .tarjeta-avatar:hover {
+    .tarjeta-imagen:hover {
       border-color: var(--color-azul-medio);
       transform: translateY(-2px);
       box-shadow: var(--sombra-suave);
     }
 
-    .tarjeta-avatar:focus-visible {
-      outline: none;
-      box-shadow: var(--sombra-foco);
-    }
-
-    .tarjeta-avatar.seleccionada {
+    .tarjeta-imagen.seleccionada {
       border-color: var(--color-dorado);
       box-shadow: 0 0 0 3px rgba(208, 172, 43, 0.35);
     }
 
-    .avatar-imagen {
+    .tarjeta-imagen input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .imagen-preview {
       width: 100%;
-      aspect-ratio: 16 / 10;
+      aspect-ratio: 9 / 12;
       object-fit: cover;
+      background: var(--color-azul-claro);
       display: block;
-      background-color: var(--color-azul-claro);
     }
 
-    .avatar-imagen-placeholder {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      background: linear-gradient(135deg, var(--color-azul-claro), var(--color-blanco));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-azul);
-      font-size: var(--texto-xs);
-      padding: var(--sp-3);
-      text-align: center;
+    .imagen-info {
+      padding: 0.75rem;
     }
 
-    .avatar-info {
-      padding: var(--sp-3);
-    }
-
-    .avatar-nombre {
+    .imagen-nombre {
       display: block;
-      font-size: var(--texto-sm);
       color: var(--color-azul);
       font-weight: bold;
-      line-height: 1.3;
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
     }
 
-    .avatar-genero {
-      display: block;
-      font-size: var(--texto-xs);
-      color: var(--color-gris-muted);
-      margin-top: var(--sp-1);
-    }
-
-    .texto-cargando-avatares,
-    .texto-sin-avatares {
-      grid-column: 1 / -1;
-      font-size: var(--texto-sm);
-      color: var(--color-gris-texto);
-      background-color: var(--color-blanco);
-      border: 1px solid var(--color-gris-borde);
-      border-radius: var(--radio-sm);
-      padding: var(--sp-4);
-    }
-
-    .preview-voz {
-      margin-top: var(--sp-3);
-      background-color: var(--color-blanco);
-      border: 1px solid var(--color-gris-borde);
-      border-radius: var(--radio-sm);
-      padding: var(--sp-3);
-      font-size: var(--texto-sm);
+    .imagen-movimiento {
+      display: inline-block;
+      background: var(--color-azul-claro);
       color: var(--color-azul);
+      border-radius: 20px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.72rem;
+      font-weight: bold;
+      margin-bottom: 0.35rem;
     }
 
-    .preview-voz[hidden] {
+    .imagen-texto {
+      display: block;
+      color: var(--color-gris-muted);
+      font-size: 0.76rem;
+      line-height: 1.4;
+    }
+
+    .lista-voces {
+      display: grid;
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .tarjeta-voz {
+      background: var(--color-blanco);
+      border: 2px solid var(--color-gris-borde);
+      border-radius: var(--radio-md);
+      padding: 1rem;
+      cursor: pointer;
+      transition: var(--transicion);
+      display: block;
+    }
+
+    .tarjeta-voz:hover {
+      border-color: var(--color-azul-medio);
+      transform: translateY(-1px);
+      box-shadow: var(--sombra-suave);
+    }
+
+    .tarjeta-voz.seleccionada {
+      border-color: var(--color-dorado);
+      box-shadow: 0 0 0 3px rgba(208, 172, 43, 0.35);
+    }
+
+    .tarjeta-voz input {
+      margin-right: 0.5rem;
+    }
+
+    .voz-nombre {
+      color: var(--color-azul);
+      font-weight: bold;
+    }
+
+    .voz-descripcion {
+      display: block;
+      color: var(--color-gris-texto);
+      font-size: 0.82rem;
+      margin: 0.35rem 0 0.75rem;
+    }
+
+    .tarjeta-voz audio {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .resultado-final {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      border-radius: var(--radio-md);
+      background: var(--color-exito-fondo);
+      border: 1.5px solid var(--color-exito);
+      color: var(--color-exito);
       display: none;
     }
 
-    .preview-voz audio {
-      width: 100%;
-      margin-top: var(--sp-2);
+    .resultado-final.visible {
+      display: block;
+    }
+
+    .resultado-final a {
+      color: var(--color-azul);
+      font-weight: bold;
+      word-break: break-all;
     }
 
     .tarjeta-pie {
-      background-color: var(--color-azul-claro);
+      background: var(--color-azul-claro);
       border-top: 1px solid var(--color-gris-borde);
-      padding: var(--sp-4) var(--sp-8);
+      padding: 1rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--sp-4);
+      gap: 1rem;
       flex-wrap: wrap;
     }
 
     .pie-texto {
-      font-size: var(--texto-xs);
       color: var(--color-gris-muted);
-      letter-spacing: 0.02em;
+      font-size: 0.78rem;
     }
 
     .pie-badge {
-      font-size: var(--texto-xs);
       color: var(--color-azul);
       background: rgba(19, 43, 84, 0.08);
-      padding: var(--sp-1) var(--sp-3);
+      padding: 0.25rem 0.75rem;
       border-radius: 20px;
+      font-size: 0.75rem;
       font-weight: bold;
-      letter-spacing: 0.06em;
       text-transform: uppercase;
-      white-space: nowrap;
+      letter-spacing: 0.06em;
     }
 
     .pie-global {
       text-align: center;
-      margin-top: var(--sp-8);
-      font-size: var(--texto-xs);
+      margin-top: 2rem;
       color: var(--color-gris-muted);
+      font-size: 0.78rem;
     }
 
     @media (max-width: 640px) {
       .encabezado-contenido {
         flex-direction: column;
         text-align: center;
-        gap: var(--sp-5);
+        gap: 1.25rem;
       }
 
       .logo-imagen {
@@ -748,26 +625,18 @@
       }
 
       .titulo-herramienta {
-        font-size: var(--texto-lg);
+        font-size: 1.4rem;
       }
 
-      .subtitulo-herramienta {
-        margin: 0 auto;
-      }
-
-      .contenedor-principal {
-        padding: var(--sp-6) var(--sp-4) var(--sp-12);
-      }
-
-      .tarjeta-cuerpo {
-        padding: var(--sp-5) var(--sp-4);
+      .tarjeta-cuerpo,
+      .panel-revision {
+        padding: 1.25rem;
       }
 
       .tarjeta-banda,
-      .tarjeta-pie,
-      .panel-revision {
-        padding-left: var(--sp-4);
-        padding-right: var(--sp-4);
+      .tarjeta-pie {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
       }
 
       .acciones-formulario,
@@ -777,22 +646,6 @@
 
       .btn {
         width: 100%;
-        min-width: unset;
-      }
-
-      .tarjeta-pie {
-        justify-content: center;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .titulo-herramienta {
-        font-size: var(--texto-md);
-      }
-
-      .encabezado-institucional {
-        padding: var(--sp-6) var(--sp-4);
       }
 
       .banda-paso {
@@ -800,7 +653,6 @@
       }
     }
   </style>
-
 </head>
 
 <body>
@@ -808,371 +660,337 @@
     <div class="encabezado-contenido">
       <img src="img/logo.jpeg" alt="Logo del Colegio" class="logo-imagen">
 
-
-  <div class="encabezado-textos">
-    <p class="nombre-colegio">Nombre del Colegio</p>
-    <h1 class="titulo-herramienta">Generador de Videos con IA</h1>
-    <p class="subtitulo-herramienta">
-      Complete el siguiente formulario para crear su solicitud de video educativo
-      con inteligencia artificial.
-    </p>
-  </div>
-</div>
-
-
+      <div class="encabezado-textos">
+        <p class="nombre-colegio">Nombre del Colegio</p>
+        <h1 class="titulo-herramienta">Generador de Videos con IA</h1>
+        <p class="subtitulo-herramienta">
+          Complete el siguiente formulario para crear una solicitud de video educativo
+          con imágenes, narración y armado final en Creatomate.
+        </p>
+      </div>
+    </div>
   </header>
 
   <main class="contenedor-principal">
     <div class="tarjeta-formulario">
+      <div class="tarjeta-banda">
+        <span class="banda-etiqueta">Solicitud de video educativo</span>
+        <span class="banda-paso">Paso 1</span>
+      </div>
 
+      <div class="tarjeta-cuerpo">
+        <p class="nota-requeridos">
+          Los campos marcados con <span class="asterisco">*</span> son obligatorios.
+        </p>
 
-  <div class="tarjeta-banda" role="banner">
-    <svg class="banda-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-         aria-hidden="true">
-      <polygon points="23 7 16 12 23 17 23 7"/>
-      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-    </svg>
-    <span class="banda-etiqueta">Solicitud de video educativo</span>
-    <span class="banda-paso">Paso 1</span>
-  </div>
+        <form id="formulario-video" novalidate>
+          <section class="seccion-formulario">
+            <h2 class="seccion-titulo">Contenido del video</h2>
+            <p class="seccion-descripcion">
+              Describa el tema y el estilo que desea para el video generado.
+            </p>
 
-  <div class="tarjeta-cuerpo">
+            <div class="campo-grupo">
+              <label class="campo-etiqueta" for="tema-video">
+                Tema del video <span class="requerido">*</span>
+              </label>
+              <textarea
+                id="tema-video"
+                class="campo-textarea"
+                placeholder="Ej.: La fotosíntesis y cómo las plantas producen su propio alimento"
+                rows="3"
+                maxlength="500"
+                required
+              ></textarea>
+              <span class="campo-ayuda">
+                Describa con claridad el contenido principal del video. Máximo 500 caracteres.
+              </span>
+              <span class="campo-mensaje-error" id="tema-video-error">
+                Este campo es obligatorio.
+              </span>
+            </div>
 
-    <p class="nota-requeridos">
-      Los campos marcados con <span class="asterisco">*</span> son obligatorios.
+            <div class="campo-grupo">
+              <label class="campo-etiqueta" for="tono-video">
+                Tono del video <span class="requerido">*</span>
+              </label>
+
+              <div class="select-contenedor">
+                <select id="tono-video" class="campo-select" required>
+                  <option value="" disabled selected>— Seleccione un tono —</option>
+                  <option value="educativo-formal">Educativo formal</option>
+                  <option value="educativo-amigable">Educativo amigable</option>
+                  <option value="divertido">Divertido y entretenido</option>
+                  <option value="inspirador">Inspirador y motivador</option>
+                  <option value="narrativo">Narrativo / cuenta-cuentos</option>
+                  <option value="documental">Documental e informativo</option>
+                  <option value="dinamico">Dinámico y energético</option>
+                </select>
+              </div>
+
+              <span class="campo-ayuda">
+                El tono define la forma en que la IA redactará el guion.
+              </span>
+              <span class="campo-mensaje-error" id="tono-video-error">
+                Debe seleccionar un tono.
+              </span>
+            </div>
+          </section>
+
+          <section class="seccion-formulario">
+            <h2 class="seccion-titulo">Especificaciones técnicas</h2>
+            <p class="seccion-descripcion">
+              Defina los parámetros básicos del video.
+            </p>
+
+            <div class="campo-grupo">
+              <label class="campo-etiqueta" for="duracion-video">
+                Duración del video <span class="requerido">*</span>
+              </label>
+
+              <div class="input-con-unidad">
+                <input
+                  type="number"
+                  id="duracion-video"
+                  class="campo-input"
+                  placeholder="Ej.: 30"
+                  min="10"
+                  max="180"
+                  step="5"
+                  required
+                />
+                <span class="input-unidad">segundos</span>
+              </div>
+
+              <span class="campo-ayuda">
+                Para la prueba, se recomienda entre 20 y 60 segundos.
+              </span>
+              <span class="campo-mensaje-error" id="duracion-video-error">
+                Ingrese una duración válida entre 10 y 180 segundos.
+              </span>
+            </div>
+
+            <div class="campo-grupo">
+              <label class="campo-etiqueta" for="formato-video">
+                Formato del video <span class="requerido">*</span>
+              </label>
+
+              <select id="formato-video" class="campo-select" required>
+                <option value="vertical" selected>Vertical 9:16 — Reels / TikTok / Shorts</option>
+                <option value="horizontal">Horizontal 16:9 — YouTube / Presentación</option>
+                <option value="cuadrado">Cuadrado 1:1 — Redes sociales</option>
+              </select>
+
+              <span class="campo-ayuda">
+                Este valor se enviará a n8n para decidir el formato en Creatomate.
+              </span>
+            </div>
+          </section>
+
+          <section class="seccion-formulario">
+            <h2 class="seccion-titulo">Público objetivo</h2>
+            <p class="seccion-descripcion">
+              Indique para quién va dirigido el video.
+            </p>
+
+            <div class="campo-grupo">
+              <label class="campo-etiqueta" for="publico-video">
+                Nivel académico <span class="requerido">*</span>
+              </label>
+
+              <select id="publico-video" class="campo-select" required>
+                <option value="" disabled selected>— Seleccione el nivel —</option>
+
+                <optgroup label="Preescolar">
+                  <option value="prekinder">Pre-kínder</option>
+                  <option value="kinder">Kínder</option>
+                </optgroup>
+
+                <optgroup label="Primaria">
+                  <option value="primero">1.° grado</option>
+                  <option value="segundo">2.° grado</option>
+                  <option value="tercero">3.° grado</option>
+                  <option value="cuarto">4.° grado</option>
+                  <option value="quinto">5.° grado</option>
+                  <option value="sexto">6.° grado</option>
+                </optgroup>
+
+                <optgroup label="Secundaria">
+                  <option value="septimo">7.° año</option>
+                  <option value="octavo">8.° año</option>
+                  <option value="noveno">9.° año</option>
+                  <option value="decimo">10.° año</option>
+                  <option value="undecimo">11.° año</option>
+                </optgroup>
+              </select>
+
+              <span class="campo-ayuda">
+                Esto ayuda a que el lenguaje del guion sea adecuado.
+              </span>
+              <span class="campo-mensaje-error" id="publico-video-error">
+                Debe seleccionar el público objetivo.
+              </span>
+            </div>
+          </section>
+
+          <section class="seccion-formulario">
+            <h2 class="seccion-titulo">Datos de contacto</h2>
+            <p class="seccion-descripcion">
+              Indique dónde desea recibir el enlace del video.
+            </p>
+
+            <div class="campo-grupo">
+              <label class="campo-etiqueta" for="correo-solicitante">
+                Correo para recibir el video <span class="requerido">*</span>
+              </label>
+
+              <input
+                type="email"
+                id="correo-solicitante"
+                class="campo-input"
+                placeholder="Ej.: docente@colegio.com"
+                required
+              />
+
+              <span class="campo-ayuda">
+                Este correo se enviará a n8n junto con la solicitud.
+              </span>
+              <span class="campo-mensaje-error" id="correo-solicitante-error">
+                Ingrese un correo válido.
+              </span>
+            </div>
+          </section>
+
+          <div class="acciones-formulario">
+            <button type="button" class="btn btn-secundario" id="btn-limpiar">
+              Limpiar
+            </button>
+
+            <button type="submit" class="btn btn-primario" id="btn-enviar">
+              Generar opciones
+            </button>
+          </div>
+
+          <div class="notificacion notificacion-exito" id="notif-exito">
+            <span id="notif-exito-texto">Solicitud enviada correctamente.</span>
+          </div>
+
+          <div class="notificacion notificacion-error" id="notif-error">
+            <span id="notif-error-texto">Revise los campos marcados.</span>
+          </div>
+        </form>
+
+        <section class="panel-revision" id="panel-revision" hidden>
+          <h2 class="panel-revision-titulo">Seleccione imágenes y voz</h2>
+          <p class="panel-revision-descripcion">
+            Revise las opciones generadas por IA. Seleccione las imágenes que desea usar
+            y una voz de narración. Luego n8n enviará todo a Creatomate.
+          </p>
+
+          <div class="resumen-generado">
+            <p><strong>Título:</strong> <span id="revision-titulo">—</span></p>
+            <p><strong>Solicitud ID:</strong> <span id="revision-solicitud-id">—</span></p>
+          </div>
+
+          <div class="campo-grupo">
+            <label class="campo-etiqueta" for="narracion-revision">
+              Narración final <span class="requerido">*</span>
+            </label>
+
+            <textarea
+              id="narracion-revision"
+              class="campo-textarea"
+              rows="8"
+              placeholder="Aquí aparecerá la narración generada por IA."
+            ></textarea>
+
+            <span class="campo-ayuda">
+              Puede editar la narración antes de crear el video final.
+            </span>
+          </div>
+
+          <div class="campo-grupo">
+            <label class="campo-etiqueta">
+              Imágenes para el video <span class="requerido">*</span>
+            </label>
+
+            <div class="galeria-imagenes" id="galeria-imagenes">
+              <!-- Aquí se cargan las imágenes generadas por n8n -->
+            </div>
+
+            <span class="campo-ayuda">
+              Seleccione al menos una imagen. Las imágenes marcadas como “animada”
+              podrán tener zoom, paneo o movimiento dentro de Creatomate.
+            </span>
+          </div>
+
+          <div class="campo-grupo">
+            <label class="campo-etiqueta">
+              Voz de narración <span class="requerido">*</span>
+            </label>
+
+            <div class="lista-voces" id="lista-voces">
+              <!-- Aquí se cargan las voces generadas por n8n -->
+            </div>
+
+            <span class="campo-ayuda">
+              Seleccione una de las 3 voces disponibles.
+            </span>
+          </div>
+
+          <div class="acciones-revision">
+            <button type="button" class="btn btn-peligro" id="btn-cancelar-revision">
+              Cancelar
+            </button>
+
+            <button type="button" class="btn btn-primario" id="btn-crear-video">
+              Crear video final
+            </button>
+          </div>
+
+          <div class="resultado-final" id="resultado-final">
+            <p><strong>Resultado:</strong> <span id="resultado-mensaje">Video enviado a Creatomate.</span></p>
+            <p id="resultado-link-contenedor" hidden>
+              <a id="resultado-link" href="#" target="_blank" rel="noopener noreferrer">
+                Ver video generado
+              </a>
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <div class="tarjeta-pie">
+        <span class="pie-texto">
+          Los datos ingresados se utilizan únicamente para generar el video educativo.
+        </span>
+        <span class="pie-badge">IA + Creatomate</span>
+      </div>
+    </div>
+
+    <p class="pie-global">
+      &copy; <span id="anio-actual"></span> Nombre del Colegio &mdash; Todos los derechos reservados
     </p>
-
-    <form id="formulario-video" novalidate aria-label="Formulario de solicitud de video educativo con IA">
-
-      <section class="seccion-formulario" aria-labelledby="sec-contenido">
-        <h2 class="seccion-titulo" id="sec-contenido">Contenido del video</h2>
-        <p class="seccion-descripcion">
-          Describa el tema y el tono que desea para el video generado.
-        </p>
-
-        <div class="campo-grupo">
-          <label class="campo-etiqueta" for="tema-video">
-            Tema del video <span class="requerido" aria-hidden="true">*</span>
-          </label>
-          <textarea
-            id="tema-video"
-            name="tema-video"
-            class="campo-textarea"
-            placeholder="Ej.: La fotosíntesis y cómo las plantas producen su propio alimento"
-            rows="3"
-            required
-            maxlength="500"
-            aria-required="true"
-            aria-describedby="tema-video-ayuda tema-video-error"
-          ></textarea>
-          <span class="campo-ayuda" id="tema-video-ayuda">
-            Describa con claridad el contenido principal que debe abordar el video. Máximo 500 caracteres.
-          </span>
-          <span class="campo-mensaje-error" id="tema-video-error" role="alert" aria-live="polite">
-            Este campo es obligatorio. Por favor, ingrese el tema del video.
-          </span>
-        </div>
-
-        <div class="campo-grupo">
-          <label class="campo-etiqueta" for="tono-video">
-            Tono del video <span class="requerido" aria-hidden="true">*</span>
-          </label>
-          <div class="select-contenedor">
-            <select
-              id="tono-video"
-              name="tono-video"
-              class="campo-select"
-              required
-              aria-required="true"
-              aria-describedby="tono-video-ayuda tono-video-error"
-            >
-              <option value="" disabled selected>— Seleccione un tono —</option>
-              <option value="educativo-formal">Educativo formal</option>
-              <option value="educativo-amigable">Educativo amigable</option>
-              <option value="divertido">Divertido y entretenido</option>
-              <option value="inspirador">Inspirador y motivador</option>
-              <option value="narrativo">Narrativo / cuenta-cuentos</option>
-              <option value="documental">Documental e informativo</option>
-              <option value="interactivo">Interactivo y participativo</option>
-              <option value="serio">Serio y reflexivo</option>
-              <option value="humoristico">Humorístico</option>
-              <option value="dinamico">Dinámico y energético</option>
-            </select>
-            <svg class="select-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-          <span class="campo-ayuda" id="tono-video-ayuda">
-            El tono define la forma en que se comunicará el mensaje al público.
-          </span>
-          <span class="campo-mensaje-error" id="tono-video-error" role="alert" aria-live="polite">
-            Por favor, seleccione el tono del video.
-          </span>
-        </div>
-      </section>
-
-      <section class="seccion-formulario" aria-labelledby="sec-tecnico">
-        <h2 class="seccion-titulo" id="sec-tecnico">Especificaciones técnicas</h2>
-        <p class="seccion-descripcion">
-          Defina los parámetros técnicos del video que desea generar.
-        </p>
-
-        <div class="campo-grupo">
-          <label class="campo-etiqueta" for="duracion-video">
-            Duración del video <span class="requerido" aria-hidden="true">*</span>
-          </label>
-          <div class="input-con-unidad">
-            <input
-              type="number"
-              id="duracion-video"
-              name="duracion-video"
-              class="campo-input"
-              placeholder="Ej.: 120"
-              min="10"
-              max="1800"
-              step="5"
-              required
-              aria-required="true"
-              aria-describedby="duracion-video-ayuda duracion-video-error"
-            />
-            <span class="input-unidad" aria-hidden="true">segundos</span>
-          </div>
-          <span class="campo-ayuda" id="duracion-video-ayuda">
-            Ingrese un valor entre 10 y 1&thinsp;800 segundos.
-          </span>
-          <span class="campo-mensaje-error" id="duracion-video-error" role="alert" aria-live="polite">
-            Por favor, ingrese una duración válida entre 10 y 1&thinsp;800 segundos.
-          </span>
-        </div>
-      </section>
-
-      <section class="seccion-formulario" aria-labelledby="sec-publico">
-        <h2 class="seccion-titulo" id="sec-publico">Público objetivo</h2>
-        <p class="seccion-descripcion">
-          Indique el nivel académico al que va dirigido el video.
-        </p>
-
-        <div class="campo-grupo">
-          <label class="campo-etiqueta" for="publico-video">
-            Nivel académico <span class="requerido" aria-hidden="true">*</span>
-          </label>
-          <div class="select-contenedor">
-            <select
-              id="publico-video"
-              name="publico-video"
-              class="campo-select"
-              required
-              aria-required="true"
-              aria-describedby="publico-video-ayuda publico-video-error"
-            >
-              <option value="" disabled selected>— Seleccione el nivel —</option>
-
-              <optgroup label="Preescolar">
-                <option value="kinder">Kínder (4–5 años)</option>
-                <option value="prekinder">Pre-kínder (3–4 años)</option>
-              </optgroup>
-
-              <optgroup label="Primaria (I Ciclo — 1.° a 3.°)">
-                <option value="primero">1.° grado</option>
-                <option value="segundo">2.° grado</option>
-                <option value="tercero">3.° grado</option>
-              </optgroup>
-
-              <optgroup label="Primaria (II Ciclo — 4.° a 6.°)">
-                <option value="cuarto">4.° grado</option>
-                <option value="quinto">5.° grado</option>
-                <option value="sexto">6.° grado</option>
-              </optgroup>
-
-              <optgroup label="Secundaria (I Ciclo — 7.° a 9.°)">
-                <option value="septimo">7.° año</option>
-                <option value="octavo">8.° año</option>
-                <option value="noveno">9.° año</option>
-              </optgroup>
-
-              <optgroup label="Secundaria (II Ciclo — 10.° a 11.°)">
-                <option value="decimo">10.° año</option>
-                <option value="undecimo">11.° año</option>
-              </optgroup>
-            </select>
-            <svg class="select-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-          <span class="campo-ayuda" id="publico-video-ayuda">
-            Esto ajusta el lenguaje y la complejidad del contenido generado.
-          </span>
-          <span class="campo-mensaje-error" id="publico-video-error" role="alert" aria-live="polite">
-            Por favor, seleccione el nivel académico del público objetivo.
-          </span>
-        </div>
-      </section>
-
-      <section class="seccion-formulario" aria-labelledby="sec-contacto">
-        <h2 class="seccion-titulo" id="sec-contacto">Datos de contacto</h2>
-        <p class="seccion-descripcion">
-          Indique dónde desea recibir la información del video generado.
-        </p>
-
-        <div class="campo-grupo">
-          <label class="campo-etiqueta" for="correo-solicitante">
-            Correo para recibir el video <span class="requerido" aria-hidden="true">*</span>
-          </label>
-          <input
-            type="email"
-            id="correo-solicitante"
-            name="correo-solicitante"
-            class="campo-input"
-            placeholder="Ej.: docente@colegio.com"
-            required
-            aria-required="true"
-            aria-describedby="correo-solicitante-ayuda correo-solicitante-error"
-          />
-          <span class="campo-ayuda" id="correo-solicitante-ayuda">
-            A este correo se le podrá enviar el enlace del video cuando esté listo.
-          </span>
-          <span class="campo-mensaje-error" id="correo-solicitante-error" role="alert" aria-live="polite">
-            Por favor, ingrese un correo válido.
-          </span>
-        </div>
-      </section>
-
-      <div class="acciones-formulario">
-        <button type="button" class="btn btn-secundario" id="btn-limpiar">
-          Limpiar
-        </button>
-
-        <button type="submit" class="btn btn-primario" id="btn-enviar">
-          Enviar solicitud
-        </button>
-      </div>
-
-      <div class="notificacion notificacion-exito" id="notif-exito" role="status" aria-live="polite">
-        <span id="notif-exito-texto">Solicitud enviada correctamente.</span>
-      </div>
-
-      <div class="notificacion notificacion-error" id="notif-error" role="alert" aria-live="assertive">
-        <span id="notif-error-texto">Por favor, revise los campos marcados antes de continuar.</span>
-      </div>
-    </form>
-
-    <section class="panel-revision" id="panel-revision" hidden>
-      <div class="panel-revision-cabecera">
-        <h2 class="panel-revision-titulo">Revisión antes de generar el video</h2>
-        <p class="panel-revision-descripcion">
-          Revise el guion generado por IA. Puede corregirlo, elegir avatar y voz antes de aprobar la generación en HeyGen.
-        </p>
-      </div>
-
-      <div class="resumen-generado">
-        <p><strong>Título:</strong> <span id="revision-titulo">—</span></p>
-        <p><strong>Resumen:</strong> <span id="revision-resumen">—</span></p>
-        <p><strong>Avatar recomendado:</strong> <span id="revision-avatar-recomendado">—</span></p>
-        <p><strong>Voz recomendada:</strong> <span id="revision-voz-recomendada">—</span></p>
-      </div>
-
-      <div class="campo-grupo">
-        <label class="campo-etiqueta" for="guion-revision">
-          Guion final <span class="requerido" aria-hidden="true">*</span>
-        </label>
-        <textarea
-          id="guion-revision"
-          class="campo-textarea"
-          rows="10"
-          placeholder="Aquí aparecerá el guion generado por IA."
-        ></textarea>
-        <span class="campo-ayuda">
-          Puede editar el texto antes de aprobarlo. Este será el guion enviado a HeyGen.
-        </span>
-      </div>
-
-      <div class="campo-grupo">
-        <label class="campo-etiqueta">
-          Avatar para el video <span class="requerido" aria-hidden="true">*</span>
-        </label>
-
-        <input type="hidden" id="avatar-revision" value="">
-
-        <div class="galeria-avatares" id="galeria-avatares">
-          <p class="texto-cargando-avatares">Cargando avatares disponibles...</p>
-        </div>
-
-        <span class="campo-ayuda">
-          Seleccione el avatar dando clic sobre la imagen.
-        </span>
-      </div>
-
-      <div class="campo-grupo">
-        <label class="campo-etiqueta" for="voz-revision">
-          Voz para el video <span class="requerido" aria-hidden="true">*</span>
-        </label>
-
-        <div class="select-contenedor">
-          <select id="voz-revision" class="campo-select">
-            <option value="">— Seleccione una voz en español —</option>
-          </select>
-
-          <svg class="select-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-
-        <div class="preview-voz" id="preview-voz" hidden>
-          <strong>Vista previa de voz:</strong>
-          <audio id="audio-preview-voz" controls></audio>
-        </div>
-
-        <span class="campo-ayuda">
-          Solo se mostrarán voces detectadas como español desde HeyGen.
-        </span>
-      </div>
-
-      <div class="acciones-revision">
-        <button type="button" class="btn btn-peligro" id="btn-rechazar">
-          Rechazar
-        </button>
-
-        <button type="button" class="btn btn-primario" id="btn-aprobar">
-          Aprobar y generar video
-        </button>
-      </div>
-    </section>
-
-  </div>
-
-  <div class="tarjeta-pie">
-    <span class="pie-texto">
-      Todos los datos ingresados son utilizados exclusivamente para la generación del video educativo.
-    </span>
-    <span class="pie-badge">IA Educativa</span>
-  </div>
-
-</div>
-
-<p class="pie-global">
-  &copy; <span id="anio-actual"></span> Nombre del Colegio &mdash; Todos los derechos reservados
-</p>
-
-
   </main>
 
   <script>
     document.getElementById('anio-actual').textContent = new Date().getFullYear();
 
     /*
-      Para pruebas:
-      https://zuzu09.app.n8n.cloud/webhook-test/generar-video
+      IMPORTANTE:
 
-      Para producción cuando el workflow esté activo:
-      https://zuzu09.app.n8n.cloud/webhook/generar-video
+      Para pruebas en n8n:
+      - Usa /webhook-test/...
+      - El workflow debe estar abierto y escuchando el webhook.
+
+      Para producción:
+      - Cambia webhook-test por webhook.
+      - El workflow debe estar activo.
     */
-    const WEBHOOK_URL = 'https://zuzu09.app.n8n.cloud/webhook-test/generar-video';
 
-    const CLAVE_SOLICITUD = 'solicitud-video-actual';
+    const WEBHOOK_GENERAR = 'https://zuzu09.app.n8n.cloud/webhook-test/generar-video';
+    const WEBHOOK_CREAR_VIDEO = 'https://zuzu09.app.n8n.cloud/webhook-test/crear-video-final';
+
+    const CLAVE_SOLICITUD = 'solicitud-video-ia-actual';
 
     const form = document.getElementById('formulario-video');
     const btnLimpiar = document.getElementById('btn-limpiar');
@@ -1185,26 +1003,24 @@
 
     const panelRevision = document.getElementById('panel-revision');
     const revisionTitulo = document.getElementById('revision-titulo');
-    const revisionResumen = document.getElementById('revision-resumen');
-    const revisionAvatarRecomendado = document.getElementById('revision-avatar-recomendado');
-    const revisionVozRecomendada = document.getElementById('revision-voz-recomendada');
+    const revisionSolicitudId = document.getElementById('revision-solicitud-id');
+    const narracionRevision = document.getElementById('narracion-revision');
+    const galeriaImagenes = document.getElementById('galeria-imagenes');
+    const listaVoces = document.getElementById('lista-voces');
 
-    const guionRevision = document.getElementById('guion-revision');
-    const avatarRevision = document.getElementById('avatar-revision');
-    const vozRevision = document.getElementById('voz-revision');
+    const btnCrearVideo = document.getElementById('btn-crear-video');
+    const btnCancelarRevision = document.getElementById('btn-cancelar-revision');
 
-    const galeriaAvatares = document.getElementById('galeria-avatares');
-    const previewVoz = document.getElementById('preview-voz');
-    const audioPreviewVoz = document.getElementById('audio-preview-voz');
+    const resultadoFinal = document.getElementById('resultado-final');
+    const resultadoMensaje = document.getElementById('resultado-mensaje');
+    const resultadoLinkContenedor = document.getElementById('resultado-link-contenedor');
+    const resultadoLink = document.getElementById('resultado-link');
 
-    const btnAprobar = document.getElementById('btn-aprobar');
-    const btnRechazar = document.getElementById('btn-rechazar');
-
-    let datosRevisionActual = null;
-    let avatarSeleccionadoId = "";
+    let datosSolicitudActual = null;
+    let datosOpcionesActuales = null;
 
     const camposValidar = [
-      { id: 'tema-video', errorId: 'tema-video-error', tipo: 'textarea' },
+      { id: 'tema-video', errorId: 'tema-video-error', tipo: 'texto' },
       { id: 'tono-video', errorId: 'tono-video-error', tipo: 'select' },
       { id: 'duracion-video', errorId: 'duracion-video-error', tipo: 'numero' },
       { id: 'publico-video', errorId: 'publico-video-error', tipo: 'select' },
@@ -1212,24 +1028,19 @@
     ];
 
     function obtenerSolicitudId() {
-      const solicitudExistente = sessionStorage.getItem(CLAVE_SOLICITUD);
+      const existente = sessionStorage.getItem(CLAVE_SOLICITUD);
 
-      if (solicitudExistente) {
-        return solicitudExistente;
+      if (existente) {
+        return existente;
       }
 
-      const nuevaSolicitud =
-        typeof crypto.randomUUID === 'function'
+      const nuevoId =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
           ? crypto.randomUUID()
           : `video-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-      sessionStorage.setItem(CLAVE_SOLICITUD, nuevaSolicitud);
-      return nuevaSolicitud;
-    }
-
-    function restaurarBotonEnviar() {
-      btnEnviar.disabled = false;
-      btnEnviar.textContent = 'Enviar solicitud';
+      sessionStorage.setItem(CLAVE_SOLICITUD, nuevoId);
+      return nuevoId;
     }
 
     function validarEmail(valor) {
@@ -1237,36 +1048,36 @@
     }
 
     function validarCampo(config) {
-      const el = document.getElementById(config.id);
+      const campo = document.getElementById(config.id);
       const error = document.getElementById(config.errorId);
       let valido = true;
 
       if (config.tipo === 'select') {
-        valido = el.value !== '';
+        valido = campo.value !== '';
       } else if (config.tipo === 'numero') {
-        const v = parseFloat(el.value);
-        valido = el.value !== '' && !isNaN(v) && v >= 10 && v <= 1800;
+        const numero = Number(campo.value);
+        valido = campo.value !== '' && !Number.isNaN(numero) && numero >= 10 && numero <= 180;
       } else if (config.tipo === 'email') {
-        valido = el.value.trim() !== '' && validarEmail(el.value.trim());
+        valido = campo.value.trim() !== '' && validarEmail(campo.value.trim());
       } else {
-        valido = el.value.trim() !== '';
+        valido = campo.value.trim() !== '';
       }
 
       if (valido) {
-        el.classList.remove('campo-error-input');
+        campo.classList.remove('campo-error-input');
         error.classList.remove('visible');
-        el.setAttribute('aria-invalid', 'false');
+        campo.setAttribute('aria-invalid', 'false');
       } else {
-        el.classList.add('campo-error-input');
+        campo.classList.add('campo-error-input');
         error.classList.add('visible');
-        el.setAttribute('aria-invalid', 'true');
+        campo.setAttribute('aria-invalid', 'true');
       }
 
       return valido;
     }
 
-    function validarTodo() {
-      return camposValidar.reduce((acum, cfg) => validarCampo(cfg) && acum, true);
+    function validarFormularioCompleto() {
+      return camposValidar.reduce((ok, config) => validarCampo(config) && ok, true);
     }
 
     function mostrarError(mensaje) {
@@ -1291,118 +1102,174 @@
       });
     }
 
-    function limpiarTexto(texto) {
-      return String(texto || '');
+    function limpiarNotificaciones() {
+      notifExito.classList.remove('visible');
+      notifError.classList.remove('visible');
     }
 
-    function renderizarAvatares(opcionesAvatar) {
-      galeriaAvatares.innerHTML = "";
-      avatarRevision.value = "";
-      avatarSeleccionadoId = "";
+    function restaurarBotonEnviar() {
+      btnEnviar.disabled = false;
+      btnEnviar.textContent = 'Generar opciones';
+    }
 
-      if (!Array.isArray(opcionesAvatar) || opcionesAvatar.length === 0) {
-        const mensaje = document.createElement('p');
-        mensaje.className = 'texto-sin-avatares';
-        mensaje.textContent = 'No se recibieron avatares disponibles desde HeyGen.';
-        galeriaAvatares.appendChild(mensaje);
+    function normalizarImagenes(datosRespuesta) {
+      const imagenes = datosRespuesta.imagenes || datosRespuesta.images || [];
+
+      return imagenes.map((img, index) => ({
+        id: img.id || img.escenaId || `imagen-${index + 1}`,
+        url: img.url || img.imageUrl || img.src || '',
+        textoVisual: img.textoVisual || img.texto_visual || img.descripcion || `Imagen ${index + 1}`,
+        movimiento: img.movimiento || img.tipo || (index % 2 === 0 ? 'animada' : 'estatica')
+      })).filter(img => img.url);
+    }
+
+    function normalizarVoces(datosRespuesta) {
+      const voces = datosRespuesta.voces || datosRespuesta.voices || datosRespuesta.opcionesVoz || [];
+
+      return voces.map((voz, index) => ({
+        id: voz.id || voz.voiceId || voz.nombre || `voz-${index + 1}`,
+        nombre: voz.nombre || voz.label || voz.name || `Voz ${index + 1}`,
+        descripcion: voz.descripcion || voz.description || 'Voz generada para la narración.',
+        url: voz.url || voz.audioUrl || voz.previewAudioUrl || ''
+      })).filter(voz => voz.url || voz.id);
+    }
+
+    function renderizarImagenes(imagenes) {
+      galeriaImagenes.innerHTML = '';
+
+      if (!imagenes.length) {
+        galeriaImagenes.innerHTML = '<p class="campo-ayuda">No se recibieron imágenes desde n8n.</p>';
         return;
       }
 
-      opcionesAvatar.forEach(function(avatar) {
-        const tarjeta = document.createElement("button");
-        tarjeta.type = "button";
-        tarjeta.className = "tarjeta-avatar";
-        tarjeta.dataset.avatarId = avatar.avatarId || "";
+      imagenes.forEach((img, index) => {
+        const label = document.createElement('label');
+        label.className = 'tarjeta-imagen seleccionada';
 
-        const imagenUrl = avatar.previewImageUrl || "";
-        const nombre = avatar.label || avatar.avatarId || "Avatar sin nombre";
-        const genero = avatar.gender ? `Género: ${avatar.gender}` : "Avatar disponible";
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'imagenesSeleccionadas';
+        checkbox.value = img.id;
+        checkbox.checked = true;
 
-        if (imagenUrl) {
-          const imagen = document.createElement('img');
-          imagen.src = imagenUrl;
-          imagen.alt = nombre;
-          imagen.className = 'avatar-imagen';
-          imagen.loading = 'lazy';
-          tarjeta.appendChild(imagen);
-        } else {
-          const placeholder = document.createElement('div');
-          placeholder.className = 'avatar-imagen-placeholder';
-          placeholder.textContent = 'Sin imagen disponible';
-          tarjeta.appendChild(placeholder);
-        }
-
-        const info = document.createElement('div');
-        info.className = 'avatar-info';
-
-        const spanNombre = document.createElement('span');
-        spanNombre.className = 'avatar-nombre';
-        spanNombre.textContent = nombre;
-
-        const spanGenero = document.createElement('span');
-        spanGenero.className = 'avatar-genero';
-        spanGenero.textContent = genero;
-
-        info.appendChild(spanNombre);
-        info.appendChild(spanGenero);
-        tarjeta.appendChild(info);
-
-        tarjeta.addEventListener("click", function() {
-          document
-            .querySelectorAll(".tarjeta-avatar")
-            .forEach((item) => item.classList.remove("seleccionada"));
-
-          tarjeta.classList.add("seleccionada");
-
-          avatarSeleccionadoId = avatar.avatarId || "";
-          avatarRevision.value = avatarSeleccionadoId;
+        checkbox.addEventListener('change', () => {
+          label.classList.toggle('seleccionada', checkbox.checked);
         });
 
-        galeriaAvatares.appendChild(tarjeta);
+        const imagen = document.createElement('img');
+        imagen.src = img.url;
+        imagen.alt = img.textoVisual || `Imagen ${index + 1}`;
+        imagen.className = 'imagen-preview';
+        imagen.loading = 'lazy';
+
+        const info = document.createElement('div');
+        info.className = 'imagen-info';
+
+        const nombre = document.createElement('span');
+        nombre.className = 'imagen-nombre';
+        nombre.textContent = `Imagen ${index + 1}`;
+
+        const movimiento = document.createElement('span');
+        movimiento.className = 'imagen-movimiento';
+        movimiento.textContent = img.movimiento === 'animada' ? 'Animada' : 'Estática';
+
+        const texto = document.createElement('span');
+        texto.className = 'imagen-texto';
+        texto.textContent = img.textoVisual || 'Sin descripción';
+
+        info.appendChild(nombre);
+        info.appendChild(movimiento);
+        info.appendChild(texto);
+
+        label.appendChild(checkbox);
+        label.appendChild(imagen);
+        label.appendChild(info);
+
+        galeriaImagenes.appendChild(label);
       });
     }
 
-    function llenarSelectVoces(select, opciones) {
-      select.innerHTML = "";
+    function renderizarVoces(voces) {
+      listaVoces.innerHTML = '';
 
-      const opcionInicial = document.createElement("option");
-      opcionInicial.value = "";
-      opcionInicial.textContent = "— Seleccione una voz en español —";
-      select.appendChild(opcionInicial);
-
-      if (!Array.isArray(opciones) || opciones.length === 0) {
-        const opcionVacia = document.createElement("option");
-        opcionVacia.value = "";
-        opcionVacia.textContent = "No hay voces en español disponibles";
-        opcionVacia.disabled = true;
-        select.appendChild(opcionVacia);
+      if (!voces.length) {
+        listaVoces.innerHTML = '<p class="campo-ayuda">No se recibieron voces desde n8n.</p>';
         return;
       }
 
-      opciones.forEach(function(voz) {
-        const option = document.createElement("option");
-        option.value = voz.voiceId || "";
-        option.textContent = voz.label || voz.name || voz.voiceId || "Voz sin nombre";
-        option.dataset.previewAudioUrl = voz.previewAudioUrl || "";
-        select.appendChild(option);
+      voces.forEach((voz, index) => {
+        const label = document.createElement('label');
+        label.className = 'tarjeta-voz';
+
+        if (index === 0) {
+          label.classList.add('seleccionada');
+        }
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'vozSeleccionada';
+        radio.value = voz.id;
+        radio.checked = index === 0;
+
+        radio.addEventListener('change', () => {
+          document.querySelectorAll('.tarjeta-voz').forEach(item => {
+            item.classList.remove('seleccionada');
+          });
+
+          label.classList.add('seleccionada');
+        });
+
+        const nombre = document.createElement('span');
+        nombre.className = 'voz-nombre';
+        nombre.textContent = voz.nombre;
+
+        const descripcion = document.createElement('span');
+        descripcion.className = 'voz-descripcion';
+        descripcion.textContent = voz.descripcion;
+
+        label.appendChild(radio);
+        label.appendChild(nombre);
+        label.appendChild(descripcion);
+
+        if (voz.url) {
+          const audio = document.createElement('audio');
+          audio.controls = true;
+          audio.src = voz.url;
+          label.appendChild(audio);
+        }
+
+        listaVoces.appendChild(label);
       });
     }
 
     function mostrarPanelRevision(datosRespuesta) {
-      datosRevisionActual = datosRespuesta;
+      const imagenes = normalizarImagenes(datosRespuesta);
+      const voces = normalizarVoces(datosRespuesta);
 
-      revisionTitulo.textContent = datosRespuesta.titulo || 'Sin título';
-      revisionResumen.textContent = datosRespuesta.resumen || 'Sin resumen disponible.';
-      revisionAvatarRecomendado.textContent = datosRespuesta.recomendacionAvatar || 'No especificado.';
-      revisionVozRecomendada.textContent = datosRespuesta.recomendacionVoz || 'No especificada.';
+      datosOpcionesActuales = {
+        ...datosRespuesta,
+        imagenes,
+        voces
+      };
 
-      guionRevision.value = datosRespuesta.guion || '';
+      revisionTitulo.textContent = datosRespuesta.titulo || 'Video generado con IA';
+      revisionSolicitudId.textContent =
+        datosRespuesta.solicitudId ||
+        datosSolicitudActual?.solicitudId ||
+        'Sin ID';
 
-      renderizarAvatares(datosRespuesta.opcionesAvatar);
-      llenarSelectVoces(vozRevision, datosRespuesta.opcionesVoz);
+      narracionRevision.value =
+        datosRespuesta.narracion ||
+        datosRespuesta.guion ||
+        datosRespuesta.textoNarracion ||
+        '';
 
-      previewVoz.hidden = true;
-      audioPreviewVoz.removeAttribute("src");
+      renderizarImagenes(imagenes);
+      renderizarVoces(voces);
+
+      resultadoFinal.classList.remove('visible');
+      resultadoLinkContenedor.hidden = true;
+      resultadoLink.removeAttribute('href');
 
       panelRevision.hidden = false;
 
@@ -1412,79 +1279,94 @@
       });
     }
 
+    function obtenerImagenesSeleccionadas() {
+      const seleccionadas = Array.from(
+        document.querySelectorAll('input[name="imagenesSeleccionadas"]:checked')
+      ).map(input => input.value);
+
+      return datosOpcionesActuales.imagenes.filter(img => seleccionadas.includes(String(img.id)));
+    }
+
+    function obtenerVozSeleccionada() {
+      const radio = document.querySelector('input[name="vozSeleccionada"]:checked');
+
+      if (!radio) {
+        return null;
+      }
+
+      return datosOpcionesActuales.voces.find(voz => String(voz.id) === String(radio.value)) || null;
+    }
+
     function validarRevision() {
-      if (!datosRevisionActual || !datosRevisionActual.resumeUrl) {
-        mostrarError('No se recibió la URL de continuación desde n8n. Revise el nodo Wait y el campo resumeUrl.');
+      if (!datosSolicitudActual || !datosOpcionesActuales) {
+        mostrarError('No hay datos generados para crear el video.');
         return false;
       }
 
-      if (guionRevision.value.trim() === '') {
-        mostrarError('Debe revisar o completar el guion antes de aprobar.');
-        guionRevision.focus();
+      if (narracionRevision.value.trim() === '') {
+        mostrarError('La narración no puede estar vacía.');
+        narracionRevision.focus();
         return false;
       }
 
-      if (!avatarSeleccionadoId && !avatarRevision.value) {
-        mostrarError('Debe seleccionar un avatar antes de aprobar.');
+      const imagenesSeleccionadas = obtenerImagenesSeleccionadas();
 
-        galeriaAvatares.scrollIntoView({
+      if (!imagenesSeleccionadas.length) {
+        mostrarError('Debe seleccionar al menos una imagen para el video.');
+        galeriaImagenes.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
         });
-
         return false;
       }
 
-      if (vozRevision.value === '') {
-        mostrarError('Debe seleccionar una voz antes de aprobar.');
-        vozRevision.focus();
+      const vozSeleccionada = obtenerVozSeleccionada();
+
+      if (!vozSeleccionada) {
+        mostrarError('Debe seleccionar una voz para la narración.');
+        listaVoces.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
         return false;
       }
 
       return true;
     }
 
-    camposValidar.forEach(function(cfg) {
-      const el = document.getElementById(cfg.id);
+    async function leerRespuestaFetch(respuesta) {
+      const tipoContenido = respuesta.headers.get('content-type') || '';
 
-      el.addEventListener('blur', function() {
-        validarCampo(cfg);
-      });
+      if (tipoContenido.includes('application/json')) {
+        return await respuesta.json();
+      }
 
-      el.addEventListener('change', function() {
-        validarCampo(cfg);
-      });
+      const texto = await respuesta.text();
 
-      el.addEventListener('input', function() {
-        if (el.getAttribute('aria-invalid') === 'true') {
-          validarCampo(cfg);
+      return {
+        mensaje: texto
+      };
+    }
+
+    camposValidar.forEach(config => {
+      const campo = document.getElementById(config.id);
+
+      campo.addEventListener('blur', () => validarCampo(config));
+      campo.addEventListener('change', () => validarCampo(config));
+      campo.addEventListener('input', () => {
+        if (campo.getAttribute('aria-invalid') === 'true') {
+          validarCampo(config);
         }
       });
     });
 
-    vozRevision.addEventListener("change", function() {
-      const opcionSeleccionada = vozRevision.options[vozRevision.selectedIndex];
-      const previewUrl = opcionSeleccionada?.dataset?.previewAudioUrl || "";
+    form.addEventListener('submit', async function(evento) {
+      evento.preventDefault();
 
-      if (previewUrl) {
-        audioPreviewVoz.src = previewUrl;
-        previewVoz.hidden = false;
-      } else {
-        audioPreviewVoz.removeAttribute("src");
-        previewVoz.hidden = true;
-      }
-    });
-
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      notifExito.classList.remove('visible');
-      notifError.classList.remove('visible');
+      limpiarNotificaciones();
       panelRevision.hidden = true;
 
-      const formValido = validarTodo();
-
-      if (!formValido) {
+      if (!validarFormularioCompleto()) {
         mostrarError('Por favor, revise los campos marcados antes de continuar.');
 
         const primerError = form.querySelector('[aria-invalid="true"]');
@@ -1499,10 +1381,11 @@
       const campoTema = document.getElementById('tema-video');
       const campoTono = document.getElementById('tono-video');
       const campoDuracion = document.getElementById('duracion-video');
+      const campoFormato = document.getElementById('formato-video');
       const campoPublico = document.getElementById('publico-video');
       const campoCorreo = document.getElementById('correo-solicitante');
 
-      const datosSolicitud = {
+      datosSolicitudActual = {
         solicitudId: obtenerSolicitudId(),
 
         tema: campoTema.value.trim(),
@@ -1512,6 +1395,9 @@
 
         duracion: Number(campoDuracion.value),
 
+        formatoCodigo: campoFormato.value,
+        formato: campoFormato.options[campoFormato.selectedIndex].text,
+
         publicoCodigo: campoPublico.value,
         publico: campoPublico.options[campoPublico.selectedIndex].text,
 
@@ -1519,182 +1405,188 @@
       };
 
       btnEnviar.disabled = true;
-      btnEnviar.textContent = 'Generando guion…';
+      btnEnviar.textContent = 'Generando imágenes y voces…';
 
       try {
-        const respuesta = await fetch(WEBHOOK_URL, {
+        const respuesta = await fetch(WEBHOOK_GENERAR, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify(datosSolicitud)
+          body: JSON.stringify(datosSolicitudActual)
         });
 
-        const tipoContenido = respuesta.headers.get('content-type') || '';
-        let datosRespuesta;
-
-        if (tipoContenido.includes('application/json')) {
-          datosRespuesta = await respuesta.json();
-        } else {
-          const textoRespuesta = await respuesta.text();
-          datosRespuesta = { mensaje: textoRespuesta };
-        }
+        const datosRespuesta = await leerRespuestaFetch(respuesta);
 
         if (!respuesta.ok) {
           throw new Error(
             datosRespuesta.mensaje ||
-            `La solicitud falló con el código ${respuesta.status}.`
+            `n8n respondió con error ${respuesta.status}.`
           );
         }
 
-        mostrarExito(
-          datosRespuesta.mensaje ||
-          'El guion fue generado correctamente. Revíselo antes de crear el video.'
-        );
-
-        console.log('Datos enviados:', datosSolicitud);
+        console.log('Solicitud enviada a n8n:', datosSolicitudActual);
         console.log('Respuesta de n8n:', datosRespuesta);
 
-        if (datosRespuesta.resumeUrl) {
-          mostrarPanelRevision(datosRespuesta);
-        } else {
-          mostrarError('n8n respondió correctamente, pero no envió resumeUrl. Revise el nodo Wait y el nodo que prepara la revisión.');
-        }
+        mostrarExito(
+          datosRespuesta.mensaje ||
+          'Opciones generadas correctamente. Seleccione imágenes y voz para crear el video.'
+        );
+
+        mostrarPanelRevision({
+          ...datosRespuesta,
+          solicitudId: datosRespuesta.solicitudId || datosSolicitudActual.solicitudId
+        });
 
       } catch (error) {
-        console.error('Error al enviar el formulario:', error);
+        console.error('Error al generar opciones:', error);
 
         const mensaje =
           error instanceof TypeError
-            ? 'No fue posible conectarse con n8n. Revise la URL del Webhook, que el workflow esté escuchando y la configuración CORS.'
+            ? 'No fue posible conectar con n8n. Revise la URL del webhook, que el workflow esté escuchando y la configuración CORS.'
             : error.message;
 
         mostrarError(mensaje);
-
       } finally {
         restaurarBotonEnviar();
       }
     });
 
-    btnAprobar.addEventListener('click', async function() {
+    btnCrearVideo.addEventListener('click', async function() {
+      limpiarNotificaciones();
+
       if (!validarRevision()) {
         return;
       }
 
-      btnAprobar.disabled = true;
-      btnRechazar.disabled = true;
-      btnAprobar.textContent = 'Aprobando…';
+      const imagenesSeleccionadas = obtenerImagenesSeleccionadas();
+      const vozSeleccionada = obtenerVozSeleccionada();
+
+      const payloadFinal = {
+        solicitudId: datosSolicitudActual.solicitudId,
+        correo: datosSolicitudActual.correo,
+
+        tema: datosSolicitudActual.tema,
+        tono: datosSolicitudActual.tono,
+        publico: datosSolicitudActual.publico,
+        duracion: datosSolicitudActual.duracion,
+        formato: datosSolicitudActual.formatoCodigo,
+
+        titulo: datosOpcionesActuales.titulo || 'Video generado con IA',
+        narracion: narracionRevision.value.trim(),
+
+        imagenesSeleccionadas: imagenesSeleccionadas,
+        vozSeleccionada: vozSeleccionada,
+
+        herramientaFinal: 'Creatomate'
+      };
+
+      btnCrearVideo.disabled = true;
+      btnCancelarRevision.disabled = true;
+      btnCrearVideo.textContent = 'Enviando a Creatomate…';
 
       try {
-        const respuesta = await fetch(datosRevisionActual.resumeUrl, {
+        const respuesta = await fetch(WEBHOOK_CREAR_VIDEO, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({
-            aprobado: true,
-            solicitudId: datosRevisionActual.solicitudId,
-            correo: datosRevisionActual.correo,
-
-            titulo: datosRevisionActual.titulo,
-            resumen: datosRevisionActual.resumen,
-
-            guionFinal: guionRevision.value.trim(),
-            avatarId: avatarSeleccionadoId || avatarRevision.value,
-            voiceId: vozRevision.value,
-            motionPrompt: datosRevisionActual.motionPrompt || ''
-          })
+          body: JSON.stringify(payloadFinal)
         });
 
+        const datosRespuesta = await leerRespuestaFetch(respuesta);
+
         if (!respuesta.ok) {
-          throw new Error('No se pudo aprobar la solicitud en n8n.');
+          throw new Error(
+            datosRespuesta.mensaje ||
+            `n8n respondió con error ${respuesta.status}.`
+          );
         }
 
-        mostrarExito('Video aprobado. n8n continuará con la generación en HeyGen.');
+        console.log('Selección enviada a n8n:', payloadFinal);
+        console.log('Respuesta final de n8n:', datosRespuesta);
 
-        panelRevision.hidden = true;
+        resultadoMensaje.textContent =
+          datosRespuesta.mensaje ||
+          'La solicitud fue enviada correctamente a Creatomate.';
+
+        const videoUrl =
+          datosRespuesta.videoUrl ||
+          datosRespuesta.urlVideo ||
+          datosRespuesta.renderUrl ||
+          datosRespuesta.url ||
+          '';
+
+        if (videoUrl) {
+          resultadoLink.href = videoUrl;
+          resultadoLink.textContent = 'Ver video generado';
+          resultadoLinkContenedor.hidden = false;
+        } else {
+          resultadoLinkContenedor.hidden = true;
+        }
+
+        resultadoFinal.classList.add('visible');
+        mostrarExito('Video enviado correctamente a Creatomate.');
+
         sessionStorage.removeItem(CLAVE_SOLICITUD);
 
+        resultadoFinal.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+
       } catch (error) {
-        console.error('Error al aprobar:', error);
-        mostrarError(error.message);
+        console.error('Error al crear video final:', error);
+
+        const mensaje =
+          error instanceof TypeError
+            ? 'No fue posible conectar con el webhook final de n8n. Revise la URL y que el workflow esté escuchando.'
+            : error.message;
+
+        mostrarError(mensaje);
       } finally {
-        btnAprobar.disabled = false;
-        btnRechazar.disabled = false;
-        btnAprobar.textContent = 'Aprobar y generar video';
+        btnCrearVideo.disabled = false;
+        btnCancelarRevision.disabled = false;
+        btnCrearVideo.textContent = 'Crear video final';
       }
     });
 
-    btnRechazar.addEventListener('click', async function() {
-      if (!datosRevisionActual || !datosRevisionActual.resumeUrl) {
-        mostrarError('No se recibió la URL de continuación desde n8n.');
-        return;
-      }
-
-      btnAprobar.disabled = true;
-      btnRechazar.disabled = true;
-      btnRechazar.textContent = 'Rechazando…';
-
-      try {
-        const respuesta = await fetch(datosRevisionActual.resumeUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            aprobado: false,
-            solicitudId: datosRevisionActual.solicitudId,
-            motivo: 'La solicitud fue rechazada desde el formulario.'
-          })
-        });
-
-        if (!respuesta.ok) {
-          throw new Error('No se pudo rechazar la solicitud en n8n.');
-        }
-
-        mostrarExito('Solicitud rechazada. No se generará el video.');
-        panelRevision.hidden = true;
-        sessionStorage.removeItem(CLAVE_SOLICITUD);
-
-      } catch (error) {
-        console.error('Error al rechazar:', error);
-        mostrarError(error.message);
-      } finally {
-        btnAprobar.disabled = false;
-        btnRechazar.disabled = false;
-        btnRechazar.textContent = 'Rechazar';
-      }
+    btnCancelarRevision.addEventListener('click', function() {
+      panelRevision.hidden = true;
+      datosOpcionesActuales = null;
+      mostrarExito('La selección fue cancelada. Puede generar nuevas opciones.');
     });
 
     btnLimpiar.addEventListener('click', function() {
       form.reset();
+
       sessionStorage.removeItem(CLAVE_SOLICITUD);
-      datosRevisionActual = null;
-      avatarSeleccionadoId = "";
 
-      camposValidar.forEach(function(cfg) {
-        const el = document.getElementById(cfg.id);
-        const error = document.getElementById(cfg.errorId);
+      datosSolicitudActual = null;
+      datosOpcionesActuales = null;
 
-        el.classList.remove('campo-error-input');
-        el.removeAttribute('aria-invalid');
+      camposValidar.forEach(config => {
+        const campo = document.getElementById(config.id);
+        const error = document.getElementById(config.errorId);
+
+        campo.classList.remove('campo-error-input');
+        campo.removeAttribute('aria-invalid');
         error.classList.remove('visible');
       });
 
-      notifExito.classList.remove('visible');
-      notifError.classList.remove('visible');
-      panelRevision.hidden = true;
+      limpiarNotificaciones();
 
-      galeriaAvatares.innerHTML = '<p class="texto-cargando-avatares">Cargando avatares disponibles...</p>';
-      previewVoz.hidden = true;
-      audioPreviewVoz.removeAttribute("src");
+      panelRevision.hidden = true;
+      resultadoFinal.classList.remove('visible');
+
+      galeriaImagenes.innerHTML = '';
+      listaVoces.innerHTML = '';
+      narracionRevision.value = '';
 
       document.getElementById('tema-video').focus();
     });
   </script>
-
 </body>
 </html>
