@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Generador de Videos con  — Colegio</title>
+  <title>Generador de Videos con IA — Colegio</title>
 
   <style>
     :root {
@@ -208,10 +208,6 @@
 
     .campo-grupo {
       margin-bottom: 1.5rem;
-    }
-
-    .campo-grupo:last-child {
-      margin-bottom: 0;
     }
 
     .campo-etiqueta {
@@ -430,10 +426,6 @@
       margin-bottom: 0.5rem;
     }
 
-    .resumen-generado p:last-child {
-      margin-bottom: 0;
-    }
-
     .resumen-generado strong {
       color: var(--color-azul);
     }
@@ -453,6 +445,7 @@
       transition: var(--transicion);
       cursor: pointer;
       display: block;
+      position: relative;
     }
 
     .tarjeta-imagen:hover {
@@ -478,6 +471,20 @@
       object-fit: cover;
       background: var(--color-azul-claro);
       display: block;
+    }
+
+    .imagen-error-preview {
+      width: 100%;
+      aspect-ratio: 9 / 12;
+      background: var(--color-error-fondo);
+      color: var(--color-error);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.78rem;
+      font-weight: bold;
     }
 
     .imagen-info {
@@ -508,6 +515,15 @@
       color: var(--color-gris-muted);
       font-size: 0.76rem;
       line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .debug-url {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.68rem;
+      color: var(--color-error);
+      word-break: break-all;
     }
 
     .lista-voces {
@@ -556,6 +572,18 @@
     .tarjeta-voz audio {
       width: 100%;
       margin-top: 0.5rem;
+    }
+
+    .voz-error {
+      display: block;
+      color: var(--color-error);
+      background: var(--color-error-fondo);
+      border: 1px solid var(--color-error);
+      padding: 0.75rem;
+      border-radius: var(--radio-sm);
+      font-size: 0.78rem;
+      margin-top: 0.5rem;
+      word-break: break-word;
     }
 
     .resultado-final {
@@ -662,7 +690,7 @@
 
       <div class="encabezado-textos">
         <p class="nombre-colegio">Nombre del Colegio</p>
-        <h1 class="titulo-herramienta">Generador de Videos con</h1>
+        <h1 class="titulo-herramienta">Generador de Videos con IA</h1>
         <p class="subtitulo-herramienta">
           Complete el siguiente formulario para crear una solicitud de video educativo
           con imágenes, narración y armado final en Creatomate.
@@ -919,8 +947,7 @@
             </div>
 
             <span class="campo-ayuda">
-              Seleccione al menos una imagen. Las imágenes marcadas como “animada”
-              podrán tener zoom, paneo o movimiento dentro de Creatomate.
+              Seleccione al menos una imagen. Si alguna imagen no carga, revise el ID del archivo en n8n.
             </span>
           </div>
 
@@ -934,7 +961,7 @@
             </div>
 
             <span class="campo-ayuda">
-              Seleccione una de las 3 voces disponibles.
+              Seleccione una de las voces disponibles.
             </span>
           </div>
 
@@ -974,18 +1001,6 @@
 
   <script>
     document.getElementById('anio-actual').textContent = new Date().getFullYear();
-
-    /*
-      IMPORTANTE:
-
-      Para pruebas en n8n:
-      - Usa /webhook-test/...
-      - El workflow debe estar abierto y escuchando el webhook.
-
-      Para producción:
-      - Cambia webhook-test por webhook.
-      - El workflow debe estar activo.
-    */
 
     const WEBHOOK_GENERAR = 'https://zuzu09.app.n8n.cloud/webhook-test/generar-video-demo';
     const WEBHOOK_CREAR_VIDEO = 'https://zuzu09.app.n8n.cloud/webhook-test/crear-video-final';
@@ -1112,26 +1127,157 @@
       btnEnviar.textContent = 'Generar opciones';
     }
 
+    function decodificarUrl(url) {
+      return String(url || '')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#39;', "'")
+        .trim();
+    }
+
+    function extraerFileIdDrive(url) {
+      const urlLimpia = decodificarUrl(url);
+
+      if (!urlLimpia) return '';
+
+      const matchFile = urlLimpia.match(/\/file\/d\/([^/]+)/);
+      if (matchFile && matchFile[1]) {
+        return matchFile[1];
+      }
+
+      const matchId = urlLimpia.match(/[?&]id=([^&]+)/);
+      if (matchId && matchId[1]) {
+        return matchId[1];
+      }
+
+      const matchOpen = urlLimpia.match(/open\?id=([^&]+)/);
+      if (matchOpen && matchOpen[1]) {
+        return matchOpen[1];
+      }
+
+      return '';
+    }
+
+    function esFileIdInvalido(fileId) {
+      const valor = String(fileId || '').trim();
+
+      if (!valor) return true;
+
+      const idsInvalidos = [
+        'anyoneWithLink',
+        'anyone',
+        'reader',
+        'writer',
+        'commenter',
+        'owner',
+        'organizer',
+        'fileOrganizer'
+      ];
+
+      return idsInvalidos.includes(valor);
+    }
+
+    function convertirUrlImagenDrive(urlOriginal, fileIdManual = '') {
+      const urlLimpia = decodificarUrl(urlOriginal);
+      const fileId = fileIdManual || extraerFileIdDrive(urlLimpia);
+
+      if (esFileIdInvalido(fileId)) {
+        return {
+          url: '',
+          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de Drive. Eso no es el ID del archivo.`
+        };
+      }
+
+      return {
+        url: `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`,
+        error: ''
+      };
+    }
+
+    function convertirUrlAudioDrive(urlOriginal, fileIdManual = '') {
+      const urlLimpia = decodificarUrl(urlOriginal);
+      const fileId = fileIdManual || extraerFileIdDrive(urlLimpia);
+
+      if (esFileIdInvalido(fileId)) {
+        return {
+          url: '',
+          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de Drive. Eso no es el ID del audio.`
+        };
+      }
+
+      return {
+        url: `https://drive.google.com/uc?export=download&id=${fileId}`,
+        error: ''
+      };
+    }
+
     function normalizarImagenes(datosRespuesta) {
       const imagenes = datosRespuesta.imagenes || datosRespuesta.images || [];
 
-      return imagenes.map((img, index) => ({
-        id: img.id || img.escenaId || `imagen-${index + 1}`,
-        url: img.url || img.imageUrl || img.src || '',
-        textoVisual: img.textoVisual || img.texto_visual || img.descripcion || `Imagen ${index + 1}`,
-        movimiento: img.movimiento || img.tipo || (index % 2 === 0 ? 'animada' : 'estatica')
-      })).filter(img => img.url);
+      return imagenes.map((img, index) => {
+        const urlOriginal =
+          img.url ||
+          img.urlImagen ||
+          img.imageUrl ||
+          img.src ||
+          '';
+
+        const fileId =
+          img.fileId ||
+          img.driveFileId ||
+          img.idDrive ||
+          '';
+
+        const resultadoUrl = convertirUrlImagenDrive(urlOriginal, fileId);
+
+        return {
+          id: img.id || img.escenaId || `imagen-${index + 1}`,
+          escenaId: img.escenaId || index + 1,
+          url: resultadoUrl.url,
+          urlOriginal: decodificarUrl(urlOriginal),
+          errorUrl: resultadoUrl.error,
+          textoVisual:
+            img.textoVisual ||
+            img.texto_visual ||
+            img.descripcion ||
+            `Imagen ${index + 1}`,
+          movimiento:
+            img.movimiento ||
+            img.tipoMovimiento ||
+            img.tipo ||
+            'estatica'
+        };
+      });
     }
 
     function normalizarVoces(datosRespuesta) {
       const voces = datosRespuesta.voces || datosRespuesta.voices || datosRespuesta.opcionesVoz || [];
 
-      return voces.map((voz, index) => ({
-        id: voz.id || voz.voiceId || voz.nombre || `voz-${index + 1}`,
-        nombre: voz.nombre || voz.label || voz.name || `Voz ${index + 1}`,
-        descripcion: voz.descripcion || voz.description || 'Voz generada para la narración.',
-        url: voz.url || voz.audioUrl || voz.previewAudioUrl || ''
-      })).filter(voz => voz.url || voz.id);
+      return voces.map((voz, index) => {
+        const urlOriginal =
+          voz.url ||
+          voz.urlAudio ||
+          voz.audioUrl ||
+          voz.previewAudioUrl ||
+          '';
+
+        const fileId =
+          voz.fileId ||
+          voz.driveFileId ||
+          voz.idDrive ||
+          '';
+
+        const resultadoUrl = convertirUrlAudioDrive(urlOriginal, fileId);
+
+        return {
+          id: voz.id || voz.voiceId || voz.nombre || `voz-${index + 1}`,
+          nombre: voz.nombre || voz.label || voz.name || `Voz ${index + 1}`,
+          descripcion: voz.descripcion || voz.description || 'Voz generada para la narración.',
+          url: resultadoUrl.url,
+          urlOriginal: decodificarUrl(urlOriginal),
+          errorUrl: resultadoUrl.error
+        };
+      });
     }
 
     function renderizarImagenes(imagenes) {
@@ -1144,23 +1290,53 @@
 
       imagenes.forEach((img, index) => {
         const label = document.createElement('label');
-        label.className = 'tarjeta-imagen seleccionada';
+        label.className = 'tarjeta-imagen';
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.name = 'imagenesSeleccionadas';
         checkbox.value = img.id;
-        checkbox.checked = true;
+
+        if (img.url && !img.errorUrl) {
+          checkbox.checked = true;
+          label.classList.add('seleccionada');
+        } else {
+          checkbox.checked = false;
+          checkbox.disabled = true;
+        }
 
         checkbox.addEventListener('change', () => {
           label.classList.toggle('seleccionada', checkbox.checked);
         });
 
-        const imagen = document.createElement('img');
-        imagen.src = img.url;
-        imagen.alt = img.textoVisual || `Imagen ${index + 1}`;
-        imagen.className = 'imagen-preview';
-        imagen.loading = 'lazy';
+        if (img.url && !img.errorUrl) {
+          const imagen = document.createElement('img');
+          imagen.src = img.url;
+          imagen.alt = img.textoVisual || `Imagen ${index + 1}`;
+          imagen.className = 'imagen-preview';
+          imagen.loading = 'lazy';
+          imagen.referrerPolicy = 'no-referrer';
+
+          imagen.onerror = function() {
+            console.error('No se pudo cargar la imagen:', img.url);
+
+            const errorPreview = document.createElement('div');
+            errorPreview.className = 'imagen-error-preview';
+            errorPreview.textContent = 'No se pudo cargar la imagen. Revise permisos públicos en Drive.';
+
+            imagen.replaceWith(errorPreview);
+            checkbox.checked = false;
+            checkbox.disabled = true;
+            label.classList.remove('seleccionada');
+          };
+
+          label.appendChild(imagen);
+        } else {
+          const errorPreview = document.createElement('div');
+          errorPreview.className = 'imagen-error-preview';
+          errorPreview.textContent = img.errorUrl || 'Imagen sin URL válida.';
+          label.appendChild(errorPreview);
+        }
 
         const info = document.createElement('div');
         info.className = 'imagen-info';
@@ -1181,8 +1357,14 @@
         info.appendChild(movimiento);
         info.appendChild(texto);
 
+        if (img.errorUrl || img.urlOriginal) {
+          const debug = document.createElement('span');
+          debug.className = 'debug-url';
+          debug.textContent = img.errorUrl || `URL: ${img.urlOriginal}`;
+          info.appendChild(debug);
+        }
+
         label.appendChild(checkbox);
-        label.appendChild(imagen);
         label.appendChild(info);
 
         galeriaImagenes.appendChild(label);
@@ -1201,15 +1383,19 @@
         const label = document.createElement('label');
         label.className = 'tarjeta-voz';
 
-        if (index === 0) {
-          label.classList.add('seleccionada');
-        }
-
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'vozSeleccionada';
         radio.value = voz.id;
-        radio.checked = index === 0;
+
+        if (index === 0 && voz.url && !voz.errorUrl) {
+          radio.checked = true;
+          label.classList.add('seleccionada');
+        }
+
+        if (!voz.url || voz.errorUrl) {
+          radio.disabled = true;
+        }
 
         radio.addEventListener('change', () => {
           document.querySelectorAll('.tarjeta-voz').forEach(item => {
@@ -1231,11 +1417,27 @@
         label.appendChild(nombre);
         label.appendChild(descripcion);
 
-        if (voz.url) {
+        if (voz.url && !voz.errorUrl) {
           const audio = document.createElement('audio');
           audio.controls = true;
-          audio.src = voz.url;
+          audio.preload = 'metadata';
+
+          const source = document.createElement('source');
+          source.src = voz.url;
+          source.type = 'audio/mpeg';
+
+          audio.appendChild(source);
+
+          audio.addEventListener('error', function() {
+            console.error('No se pudo cargar el audio:', voz.url);
+          });
+
           label.appendChild(audio);
+        } else {
+          const error = document.createElement('span');
+          error.className = 'voz-error';
+          error.textContent = voz.errorUrl || 'La voz no tiene una URL válida.';
+          label.appendChild(error);
         }
 
         listaVoces.appendChild(label);
@@ -1284,7 +1486,9 @@
         document.querySelectorAll('input[name="imagenesSeleccionadas"]:checked')
       ).map(input => input.value);
 
-      return datosOpcionesActuales.imagenes.filter(img => seleccionadas.includes(String(img.id)));
+      return datosOpcionesActuales.imagenes.filter(img =>
+        seleccionadas.includes(String(img.id)) && img.url
+      );
     }
 
     function obtenerVozSeleccionada() {
@@ -1294,7 +1498,13 @@
         return null;
       }
 
-      return datosOpcionesActuales.voces.find(voz => String(voz.id) === String(radio.value)) || null;
+      const voz = datosOpcionesActuales.voces.find(voz => String(voz.id) === String(radio.value)) || null;
+
+      if (!voz || !voz.url) {
+        return null;
+      }
+
+      return voz;
     }
 
     function validarRevision() {
@@ -1312,7 +1522,7 @@
       const imagenesSeleccionadas = obtenerImagenesSeleccionadas();
 
       if (!imagenesSeleccionadas.length) {
-        mostrarError('Debe seleccionar al menos una imagen para el video.');
+        mostrarError('Debe seleccionar al menos una imagen válida para el video.');
         galeriaImagenes.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
@@ -1323,7 +1533,7 @@
       const vozSeleccionada = obtenerVozSeleccionada();
 
       if (!vozSeleccionada) {
-        mostrarError('Debe seleccionar una voz para la narración.');
+        mostrarError('Debe seleccionar una voz válida para la narración.');
         listaVoces.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
@@ -1476,8 +1686,8 @@
         titulo: datosOpcionesActuales.titulo || 'Video generado con IA',
         narracion: narracionRevision.value.trim(),
 
-        imagenesSeleccionadas: imagenesSeleccionadas,
-        vozSeleccionada: vozSeleccionada,
+        imagenesSeleccionadas,
+        vozSeleccionada,
 
         herramientaFinal: 'Creatomate'
       };
