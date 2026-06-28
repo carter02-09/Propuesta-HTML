@@ -703,7 +703,7 @@
     <div class="tarjeta-formulario">
       <div class="tarjeta-banda">
         <span class="banda-etiqueta">Solicitud de video educativo</span>
-        <span class="banda-paso">Paso 44</span>
+        <span class="banda-paso">Paso 1</span>
       </div>
 
       <div class="tarjeta-cuerpo">
@@ -942,12 +942,10 @@
               Imágenes para el video <span class="requerido">*</span>
             </label>
 
-            <div class="galeria-imagenes" id="galeria-imagenes">
-              <!-- Aquí se cargan las imágenes generadas por n8n -->
-            </div>
+            <div class="galeria-imagenes" id="galeria-imagenes"></div>
 
             <span class="campo-ayuda">
-              Seleccione al menos una imagen. Si alguna imagen no carga, revise el ID del archivo en n8n.
+              Seleccione al menos una imagen.
             </span>
           </div>
 
@@ -956,9 +954,7 @@
               Voz de narración <span class="requerido">*</span>
             </label>
 
-            <div class="lista-voces" id="lista-voces">
-              <!-- Aquí se cargan las voces generadas por n8n -->
-            </div>
+            <div class="lista-voces" id="lista-voces"></div>
 
             <span class="campo-ayuda">
               Seleccione una de las voces disponibles.
@@ -1177,14 +1173,14 @@
       return idsInvalidos.includes(valor);
     }
 
-    function convertirUrlImagenDrive(urlOriginal, fileIdManual = '') {
+    function prepararUrlImagenDrive(urlOriginal, fileIdManual = '') {
       const urlLimpia = decodificarUrl(urlOriginal);
       const fileId = fileIdManual || extraerFileIdDrive(urlLimpia);
 
       if (esFileIdInvalido(fileId)) {
         return {
           url: '',
-          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de Drive. Eso no es el ID del archivo.`
+          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de imagen.`
         };
       }
 
@@ -1194,14 +1190,14 @@
       };
     }
 
-    function convertirUrlAudioDrive(urlOriginal, fileIdManual = '') {
+    function prepararUrlAudioDrive(urlOriginal, fileIdManual = '') {
       const urlLimpia = decodificarUrl(urlOriginal);
       const fileId = fileIdManual || extraerFileIdDrive(urlLimpia);
 
       if (esFileIdInvalido(fileId)) {
         return {
           url: '',
-          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de Drive. Eso no es el ID del audio.`
+          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de audio.`
         };
       }
 
@@ -1228,7 +1224,7 @@
           img.idDrive ||
           '';
 
-        const resultadoUrl = convertirUrlImagenDrive(urlOriginal, fileId);
+        const resultadoUrl = prepararUrlImagenDrive(urlOriginal, fileId);
 
         return {
           id: img.id || img.escenaId || `imagen-${index + 1}`,
@@ -1267,7 +1263,7 @@
           voz.idDrive ||
           '';
 
-        const resultadoUrl = convertirUrlAudioDrive(urlOriginal, fileId);
+        const resultadoUrl = prepararUrlAudioDrive(urlOriginal, fileId);
 
         return {
           id: voz.id || voz.voiceId || voz.nombre || `voz-${index + 1}`,
@@ -1275,7 +1271,8 @@
           descripcion: voz.descripcion || voz.description || 'Voz generada para la narración.',
           url: resultadoUrl.url,
           urlOriginal: decodificarUrl(urlOriginal),
-          errorUrl: resultadoUrl.error
+          errorUrl: resultadoUrl.error,
+          mimeType: voz.mimeType || 'audio/mpeg'
         };
       });
     }
@@ -1357,10 +1354,10 @@
         info.appendChild(movimiento);
         info.appendChild(texto);
 
-        if (img.errorUrl || img.urlOriginal) {
+        if (img.errorUrl) {
           const debug = document.createElement('span');
           debug.className = 'debug-url';
-          debug.textContent = img.errorUrl || `URL: ${img.urlOriginal}`;
+          debug.textContent = img.errorUrl;
           info.appendChild(debug);
         }
 
@@ -1423,13 +1420,13 @@
           audio.preload = 'metadata';
 
           const source = document.createElement('source');
-          source.src = voz.url;
-          source.type = 'audio/mpeg';
+          source.src = decodificarUrl(voz.url);
+          source.type = voz.mimeType || 'audio/mpeg';
 
           audio.appendChild(source);
 
           audio.addEventListener('error', function() {
-            console.error('No se pudo cargar el audio:', voz.url);
+            console.error('No se pudo cargar el audio:', decodificarUrl(voz.url));
           });
 
           label.appendChild(audio);
