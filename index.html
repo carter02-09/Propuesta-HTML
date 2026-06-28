@@ -586,6 +586,15 @@
       word-break: break-word;
     }
 
+    .voz-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: var(--color-azul);
+      font-weight: bold;
+      font-size: 0.8rem;
+      word-break: break-all;
+    }
+
     .resultado-final {
       margin-top: 1.5rem;
       padding: 1.25rem;
@@ -1190,23 +1199,6 @@
       };
     }
 
-    function prepararUrlAudioDrive(urlOriginal, fileIdManual = '') {
-      const urlLimpia = decodificarUrl(urlOriginal);
-      const fileId = fileIdManual || extraerFileIdDrive(urlLimpia);
-
-      if (esFileIdInvalido(fileId)) {
-        return {
-          url: '',
-          error: `URL inválida. n8n mandó "${fileId || 'sin ID'}" como ID de audio.`
-        };
-      }
-
-      return {
-        url: `https://drive.google.com/uc?export=download&id=${fileId}`,
-        error: ''
-      };
-    }
-
     function normalizarImagenes(datosRespuesta) {
       const imagenes = datosRespuesta.imagenes || datosRespuesta.images || [];
 
@@ -1257,22 +1249,17 @@
           voz.previewAudioUrl ||
           '';
 
-        const fileId =
-          voz.fileId ||
-          voz.driveFileId ||
-          voz.idDrive ||
-          '';
-
-        const resultadoUrl = prepararUrlAudioDrive(urlOriginal, fileId);
+        const urlLimpia = decodificarUrl(urlOriginal);
 
         return {
           id: voz.id || voz.voiceId || voz.nombre || `voz-${index + 1}`,
           nombre: voz.nombre || voz.label || voz.name || `Voz ${index + 1}`,
           descripcion: voz.descripcion || voz.description || 'Voz generada para la narración.',
-          url: resultadoUrl.url,
-          urlOriginal: decodificarUrl(urlOriginal),
-          errorUrl: resultadoUrl.error,
-          mimeType: voz.mimeType || 'audio/mpeg'
+          url: urlLimpia,
+          urlOriginal: urlLimpia,
+          fileId: voz.fileId || voz.driveFileId || voz.idDrive || '',
+          errorUrl: !urlLimpia ? 'La voz no tiene URL de audio.' : '',
+          mimeType: voz.mimeType || ''
         };
       });
     }
@@ -1418,18 +1405,21 @@
           const audio = document.createElement('audio');
           audio.controls = true;
           audio.preload = 'metadata';
-
-          const source = document.createElement('source');
-          source.src = decodificarUrl(voz.url);
-          source.type = voz.mimeType || 'audio/mpeg';
-
-          audio.appendChild(source);
+          audio.src = voz.url;
 
           audio.addEventListener('error', function() {
-            console.error('No se pudo cargar el audio:', decodificarUrl(voz.url));
+            console.error('No se pudo cargar el audio:', voz.url);
           });
 
+          const linkAudio = document.createElement('a');
+          linkAudio.href = voz.url;
+          linkAudio.target = '_blank';
+          linkAudio.rel = 'noopener noreferrer';
+          linkAudio.className = 'voz-link';
+          linkAudio.textContent = 'Abrir audio en otra pestaña';
+
           label.appendChild(audio);
+          label.appendChild(linkAudio);
         } else {
           const error = document.createElement('span');
           error.className = 'voz-error';
